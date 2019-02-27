@@ -1,0 +1,119 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@*<div>
+        <img src="~/content/images/background.jpg" width="50" height="50" style="display: block" />
+    </div>
+    <div style="position: relative; width:250px;height: 140px;">
+
+        <canvas id="canvas" width="250" height="140" style="position:absolute; top: 0; left: 0; z-index: -2;"></canvas>
+        <canvas id="canvas_move" width="250" height="140"></canvas>
+    </div>*@
+
+@*<script>
+        var ctx = document.getElementById('canvas').getContext('2d');
+        var ctx_move = document.getElementById('canvas_move').getContext('2d');
+        var img = new Image();
+        var side = 16;
+        var radius = 8;
+        var sideLength = 2 * side + 0.5 * radius * (3 + Math.sqrt(3));
+        var maxX = 250-sideLength;
+        var minX = 2 * sideLength;
+
+        var maxY = 140 - sideLength;
+        var minY = radius + 0.5 * Math.sqrt(3) * radius;
+
+        var randomX = Math.floor(Math.random() * (maxX - minX + 1) + minX);
+        var randomY = Math.floor(Math.random() * (maxY - minY + 1) + minY);
+        console.log(randomX);
+        console.log(randomY);
+
+        img.onload = function () {
+            ctx.drawImage(img, 0, 0);
+
+            drawJigsaw(ctx, randomX, randomY);
+            ctx.stroke();
+            ctx.clip();
+            var imgData = ctx.getImageData(randomX, randomY-radius*(1+0.5*Math.sqrt(3)),
+                2 * side + radius * (2 + 0.5 * Math.sqrt(3)),
+                2 * side + radius * (2 + 0.5 * Math.sqrt(3)));
+            ctx.restore();
+            ctx.filltyle = 'rgba(75, 77, 76, 0.74)';
+            ctx.fillRect(0, 0, 450, 250);
+
+            ctx_move.putImageData(imgData, 1, randomY - radius * (1 + 0.5 * Math.sqrt(3)));
+            ctx_move.globalCompositeOperation = "destination-in";
+            ctx_move.save();
+            drawJigsaw(ctx_move, 0, randomY);
+            ctx_move.fillStyle = 'green';
+            ctx_move.fill();
+            ctx_move.clip();
+
+            console.log(imgData);
+            ctx.clearRect(0, 0, 250, 140);
+        }
+        img.src = '/content/images/background.jpg';
+
+
+        function drawJigsaw(canvasObj, randomX, randomY) {
+            canvasObj.strokeStyle = 'rgba(205, 207, 206, 0.74)';
+            canvasObj.beginPath();
+            canvasObj.moveTo(randomX, randomY);
+            canvasObj.lineTo(randomX + side, randomY);
+            canvasObj.arc(randomX + side + 0.5 * radius, randomY - radius * 0.5 * Math.sqrt(3), radius, 2 / 3 * Math.PI, 1 / 3 * Math.PI, false);
+            canvasObj.lineTo(randomX + 2 * side + radius, randomY);
+            canvasObj.lineTo(randomX + 2 * side + radius, randomY + side);
+            canvasObj.arc(randomX + 2 * side + radius + radius * 0.5 * Math.sqrt(3), randomY + side + 0.5 * radius, radius, 7 / 6 * Math.PI, 5 / 6 * Math.PI, false);
+            canvasObj.lineTo(randomX + 2 * side + radius, randomY + 2 * side + radius);
+            canvasObj.lineTo(randomX, randomY + 2 * side + radius);
+            canvasObj.lineTo(randomX, randomY + side + radius);
+            canvasObj.arc(randomX + radius * 0.5 * Math.sqrt(3), randomY + side + 0.5 * radius, radius, 5 / 6 * Math.PI, 7 / 6 * Math.PI, true);
+            canvasObj.lineTo(randomX, randomY);
+        }
+    </script>*@
+
+
+
+
+
+<div style="position: relative;">
+    <div id="checkImgCover"></div>
+    <img id="checkImg" src="@ViewBag.imgUrl" />
+    <button id="btnSubmit"></button>
+</div>
+<style>
+    /*#checkImgCover {
+        width: 300px;
+        height: 300px;
+        position: absolute;
+        z-index: 999;
+    }*/
+</style>
+<script src="http://code.jquery.com/jquery-1.12.4.min.js"
+        integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+        crossorigin="anonymous"></script>
+
+<script>
+    $(function () {
+        let leftOffset = $("#checkImg").offset().left;
+        let topOffset = $("#checkImg").offset().top + 29;
+        var points = [];
+        $("#checkImg").click(function (event) {
+            points.push(event.pageX - leftOffset);
+            points.push(event.pageY - topOffset);
+            console.log(points);
+        });
+        $("#btnSubmit").click(function () {
+            $.ajax({
+                url: '/Home/CheckPoint',
+                type: 'post',
+                data: {
+                    points: points
+                },
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        });
+    });
+</script>

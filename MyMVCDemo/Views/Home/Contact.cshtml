@@ -1,0 +1,19 @@
+﻿@foreach (var item in ViewBag.matchInfoOutputList)
+{
+    <ul>
+        <li>比赛名 @item.MatchName</li>
+        <li>证券账户总资产 @item.TotalAsset</li>
+        <li>持仓市值 @item.HoldMarketValue</li>
+        <li>累计实现盈亏 @item.totalProfitAndLoss</li>
+        <li>可用资金 @item.FreeFund</li>
+        <li>银行账户余额 @item.CurrentValue</li>
+    </ul>
+}
+
+@ViewBag.msg
+
+
+<address>
+    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
+    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
+</address>

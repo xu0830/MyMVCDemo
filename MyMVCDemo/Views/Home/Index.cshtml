@@ -78,8 +78,9 @@
 
 <div style="position: relative;">
     <div id="checkImgCover"></div>
-    <img id="checkImg" src="@ViewBag.imgUrl" />
-    <button id="btnSubmit"></button>
+    <img id="checkImg" src="" />
+    <button id="btnRefresh">刷新</button>
+    <button id="btnSubmit">提交</button>
 </div>
 <style>
     /*#checkImgCover {
@@ -95,12 +96,13 @@
 
 <script>
     $(function () {
+        
         let leftOffset = $("#checkImg").offset().left;
-        let topOffset = $("#checkImg").offset().top + 29;
+        let topOffset = $("#checkImg").offset().top;
         var points = [];
         $("#checkImg").click(function (event) {
-            points.push(event.pageX - leftOffset);
-            points.push(event.pageY - topOffset);
+            points.push(Math.floor(event.pageX - leftOffset));
+            points.push(Math.floor(event.pageY - topOffset));
             console.log(points);
         });
         $("#btnSubmit").click(function () {
@@ -112,8 +114,20 @@
                 },
                 success: function (data) {
                     console.log(data);
+                    points.length = 0;
                 }
             });
         });
+        $("#btnRefresh").click(function () {
+            $.ajax({
+                url: '/Home/GetImage',
+                type: 'post',
+                success: function (data) {
+                    console.log(data);
+                    $("#checkImg").attr("src", data.imgUrl);
+                }
+            });
+        });
+        $("#btnRefresh").click();
     });
 </script>

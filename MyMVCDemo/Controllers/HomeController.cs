@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using MyMVCDemo.Models;
 using Newtonsoft.Json;
 using RestSharp;
 using ThreadError.Test;
@@ -31,16 +32,21 @@ namespace MyMVCDemo.Controllers
             //string data = HttpHelper.SendPostRequest("http://120.77.254.201:8085/Handlers/Default/BankFinanceHandler.ashx/?method=GetBankFundsWithInitFundsConditional", "TraderID=" + traderId, new CookieContainer(), HttpHelper.header);
             //ViewBag.Data = data;
 
-            var response = RestHelper.SendGetRequest("https://kyfw.12306.cn/passport/captcha/captcha-image64?login_site=E&module=login&rand=sjrand&1551239247870&callback=jQuery191008629789637497698_1551237847685&_=1551237847688");
+            return View();
+        }
 
-            //cookieContainer.AddRange(response.Cookies);
-            int leftBracketIndex = response.Content.IndexOf("(");
-            int rightBracketIndex = response.Content.IndexOf(")");
+        public ActionResult GetImage()
+        {
+            var client = new RestClient("https://kyfw.12306.cn/passport/captcha/captcha-image64");
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Postman-Token", "328540e8-54d7-4061-9e1b-ec284dbd0352");
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            IRestResponse response = client.Execute(request);
 
-            var data = response.Content.Substring(leftBracketIndex + 1, rightBracketIndex - leftBracketIndex - 1);
+            CaptchaImage captchaImage = JsonConvert.DeserializeObject<CaptchaImage>(response.Content);
 
-            CaptchaImage captchaImage = JsonConvert.DeserializeObject<CaptchaImage>(data);
-
+            WebConst.cookieContainer = response.Cookies;
 
             StringBuilder sb = new StringBuilder();
 
@@ -48,16 +54,53 @@ namespace MyMVCDemo.Controllers
 
             sb.Append(captchaImage.Image);
 
-            ViewBag.imgUrl = sb.ToString();
-
-            return View();
+            return Json(new {
+                imgUrl = sb.ToString(),
+                cookie = WebConst.cookieContainer
+            });
         }
+        
 
         public ActionResult CheckPoint(List<int> points)
         {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var point in points)
+            {
+                sb.Append(point + ",");
+            }
+
+            string answer = sb.ToString(0, sb.Length - 1);
+
+            WebConst.Points = answer;
+
+            var client = new RestClient("https://kyfw.12306.cn/passport/captcha/captcha-check?answer=" + answer + "&rand=sjran&login_site=E");
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Postman-Token", "2ff56327-d255-43da-8712-81a4dcdb5882");
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            if (WebConst.cookieContainer.Count > 0)
+            {
+                foreach (var cookie in WebConst.cookieContainer)
+                {
+                    request.AddParameter(cookie.Name, cookie.Value, ParameterType.Cookie);
+                }
+            }
+
+            IRestResponse response = client.Execute(request);
+
+            var client_2 = new RestClient("https://kyfw.12306.cn/passport/web/login");
+            var request_2 = new RestRequest(Method.POST);
+            request.AddHeader("Postman-Token", "dfac308a-6a39-49a6-ad5d-4f85df9bf88d");
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("Content-Type", "application/json");
+            request.AddParameter("undefined", "{\n\t\"username\":\"13428108149\",\n\t\"password\":\"xucanjie8888\",\n\t\"appid\":\"otn\",\n\t\"answer\":\"" + answer + "\"\n}", ParameterType.RequestBody);
+
+            IRestResponse response_2 = client.Execute(request);
 
             return Json(new {
-                points
+                Msg = response_2.Content
             });
         }
 
@@ -355,15 +398,56 @@ namespace MyMVCDemo.Controllers
 
     public class RestHelper
     {
-        public static IRestResponse SendGetRequest(string url)
+        public static IRestResponse SendGetRequest(string url, IList<RestResponseCookie> cookiesContainer, string data)
         {
             var client = new RestClient(url);
             var request = new RestRequest(Method.GET);
 
+            request.AddHeader("Accept", "*/*");
+            request.AddHeader("Accept-Encoding", "gzip, deflate, br");
+            request.AddHeader("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2");
+            request.AddHeader("Host", "kyfw.12306.cn");
+            request.AddHeader("Referer", "https://kyfw.12306.cn/otn/resources/login.html");
+            request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
+            if (cookiesContainer!= null && cookiesContainer.Count > 0)
+            {
+                foreach (var cookieItem in cookiesContainer)
+                {
+                    request.AddParameter(cookieItem.Name, cookieItem.Value, ParameterType.Cookie);
+                }
+            }
+            request.AddParameter("undefined", data, ParameterType.RequestBody);
+
+
             return client.Execute(request);
         }
 
+        public static IRestResponse SendPostRequest(string url, IList<RestResponseCookie> cookiesContanier, string data)
+        {
+            var client = new RestClient(url);
+            var request = new RestRequest(Method.POST);
+
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+
+
+            if (cookiesContanier != null && cookiesContanier.Count > 0)
+            {
+                foreach (var cookieItem in cookiesContanier)
+                {
+                    request.AddParameter(cookieItem.Name, cookieItem.Value, ParameterType.Cookie);
+                }
+            }
+            
+            request.AddParameter("undefined", data, ParameterType.RequestBody);
+
+            return client.Execute(request);
+
+        }
+
     }
+
+
 
     public class CaptchaImage
     {

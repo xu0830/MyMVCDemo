@@ -64,6 +64,7 @@ namespace MyMVCDemo.Controllers
         public ActionResult CheckPoint(List<int> points)
         {
             StringBuilder sb = new StringBuilder();
+            StringBuilder sb_2 = new StringBuilder();
 
             foreach (var point in points)
             {
@@ -80,6 +81,7 @@ namespace MyMVCDemo.Controllers
             request.AddHeader("cache-control", "no-cache");
             request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
 
+
             if (WebConst.cookieContainer.Count > 0)
             {
                 foreach (var cookie in WebConst.cookieContainer)
@@ -89,15 +91,22 @@ namespace MyMVCDemo.Controllers
             }
 
             IRestResponse response = client.Execute(request);
-
+            var loginAnswer = answer.Replace(",", "%2C");
             var client_2 = new RestClient("https://kyfw.12306.cn/passport/web/login");
             var request_2 = new RestRequest(Method.POST);
-            request.AddHeader("Postman-Token", "dfac308a-6a39-49a6-ad5d-4f85df9bf88d");
-            request.AddHeader("cache-control", "no-cache");
-            request.AddHeader("Content-Type", "application/json");
-            request.AddParameter("undefined", "{\n\t\"username\":\"13428108149\",\n\t\"password\":\"xucanjie8888\",\n\t\"appid\":\"otn\",\n\t\"answer\":\"" + answer + "\"\n}", ParameterType.RequestBody);
+            request_2.AddHeader("cache-control", "no-cache");
+            request_2.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            request_2.AddParameter("undefined", "username=13428108149&password=xucanjie88&answer="+ loginAnswer + "&appid=otn&undefined=", ParameterType.RequestBody);
 
-            IRestResponse response_2 = client.Execute(request);
+            if (WebConst.cookieContainer.Count > 0)
+            {
+                foreach (var cookie in WebConst.cookieContainer)
+                {
+                    request_2.AddParameter(cookie.Name, cookie.Value, ParameterType.Cookie);
+                }
+            }
+
+            IRestResponse response_2 = client_2.Execute(request_2);
 
             return Json(new {
                 Msg = response_2.Content

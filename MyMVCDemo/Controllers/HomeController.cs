@@ -95,11 +95,16 @@ namespace MyMVCDemo.Controllers
             var client_2 = new RestClient("https://kyfw.12306.cn/passport/web/login");
             var request_2 = new RestRequest(Method.POST);
             request_2.AddHeader("cache-control", "no-cache");
+            request_2.AddHeader("Host", "kyfw.12306.cn");
+            request_2.AddHeader("Origin", "https://kyfw.12306.cn");
+            request_2.AddHeader("referer", "https://kyfw.12306.cn/otn/resources/login.html");
             request_2.AddHeader("Content-Type", "application/x-www-form-urlencoded");
-            request_2.AddParameter("undefined", "username=13428108149&password=xucanjie88&answer="+ loginAnswer + "&appid=otn&undefined=", ParameterType.RequestBody);
+            request_2.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.119 Safari/537.36");
+            request_2.AddParameter("application/x-www-form-urlencoded", "username=13428108149&password=xucanjie88&answer="+ loginAnswer + "&appid=otn&undefined=", ParameterType.RequestBody);
 
             if (WebConst.cookieContainer.Count > 0)
             {
+               
                 foreach (var cookie in WebConst.cookieContainer)
                 {
                     request_2.AddParameter(cookie.Name, cookie.Value, ParameterType.Cookie);

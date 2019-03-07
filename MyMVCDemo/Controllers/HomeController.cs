@@ -120,9 +120,28 @@ namespace MyMVCDemo.Controllers
 
             IRestResponse response_2 = client_2.Execute(request_2);
 
-            var client_3 = new RestClient("https://kyfw.12306.cn/otn/login/checkUser");
+
+			/*
+			cookie
+				JSESSIONID=D77475C9D9DAF9C4E8E608946F3382D3;
+				tk=aCG3oDfoFGXjQwkUZavSkd62S20Myi-8s4cdUZyI_yUlm1210;
+				_jc_save_wfdc_flag=dc; 
+				_jc_save_fromStation=%u6DF1%u5733%u5317%2CIOQ;
+				_jc_save_toStation=%u666E%u5B81%2CPEQ; 
+				RAIL_EXPIRATION=1552149503783;
+				RAIL_DEVICEID=KZq3-zlAIAndGmzfOvghxAoGVjNH1WU3W4_v5b8SK_e2iB3yoVEj1hVGgECc7kovHnA6g4lly7OJJUrUtKWD6ZcNtX5XDGWG_As-doG05v845_tQZtT31_9edWErGowQhY-yEiv0OHg0RkONwIeM7tkeCmoisodf; 
+				_jc_save_toDate=2019-03-06; 
+				_jc_save_fromDate=2019-04-01;
+				route=495c805987d0f5c8c84b14f60212447d;
+				BIGipServerotn=720372234.64545.0000;
+				BIGipServerpool_passport=401408522.50215.0000
+				
+				If-Modified-Since: 0
+			*/
+			var client_3 = new RestClient("https://kyfw.12306.cn/passport/web/auth/uamtk");
             var request_3 = new RestRequest(Method.POST);
             request_3.AddHeader("cache-control", "no-cache");
+            request_3.AddParameter("application/x-www-form-urlencoded", "appid=otn", ParameterType.RequestBody);
 
             if (response_2.Cookies.Count > 0)
             {
@@ -133,6 +152,46 @@ namespace MyMVCDemo.Controllers
             }
 
             IRestResponse response_3 = client_3.Execute(request_3);
+
+            ResponseModel responseModel = JsonConvert.DeserializeObject<ResponseModel>(response_3.Content);
+
+
+            var client_4 = new RestClient("https://kyfw.12306.cn/otn/uamauthclient");
+            var request_4 = new RestRequest(Method.POST);
+            request_4.AddHeader("cache-control", "no-cache");
+            request_4.AddParameter("application/x-www-form-urlencoded", "tk="+ responseModel.Newapptk, ParameterType.RequestBody);
+
+            IRestResponse response_4 = client_4.Execute(request_4);
+
+
+            var client_5 = new RestClient("https://kyfw.12306.cn/otn/login/checkUser");
+            var request_5 = new RestRequest(Method.POST);
+            request_5.AddHeader("cache-control", "no-cache");
+
+            if (response_4.Cookies.Count > 0)
+            {
+                foreach (var item in response_4.Cookies)
+                {
+                    request_5.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+                }
+            }
+
+            IRestResponse response_5 = client_5.Execute(request_5);
+
+            var client_6 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs");
+            var request_6 = new RestRequest(Method.POST);
+            request_6.AddHeader("cache-control", "no-cache");
+
+            if (response_4.Cookies.Count > 0)
+            {
+                foreach (var item in response_4.Cookies)
+                {
+                    request_6.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+                }
+            }
+
+            IRestResponse response_6 = client_6.Execute(request_6);
+
 
             return Json(new
             {
@@ -214,6 +273,14 @@ namespace MyMVCDemo.Controllers
                 msg = "success"
             }, JsonRequestBehavior.AllowGet);
         }
+    }
+
+    public class ResponseModel
+    {
+        public string Result_message { get; set; }
+        public string Result_code { get; set; }
+        public string Apptk { get; set; }
+        public string Newapptk { get; set; }
     }
 
     public class VEJsonModel<T>

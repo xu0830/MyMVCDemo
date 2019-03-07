@@ -1,0 +1,114 @@
+https://kyfw.12306.cn/otn/leftTicket/queryX?
+	leftTicketDTO.train_date=2019-04-02
+	&leftTicketDTO.from_station=IOQ
+	&leftTicketDTO.to_station=KTQ&purpose_codes=ADULT
+	
+	form data
+	
+		leftTicketDTO.train_date: 2019-04-02
+		leftTicketDTO.from_station: IOQ
+		leftTicketDTO.to_station: KTQ
+		purpose_codes: ADULT
+
+https://kyfw.12306.cn/passport/web/login
+	response 
+		{
+			"result_message":"登录成功",
+			"result_code":0,
+			"uamtk":"trkaznAXSWIbJlcuvOjbSiwXFnW1XIDyYV8w6sSpEAM091110"
+		}
+	cookie
+		uamtk=trkaznAXSWIbJlcuvOjbSiwXFnW1XIDyYV8w6sSpEAM091110; Path=/passport
+
+https://kyfw.12306.cn/passport/web/auth/uamtk
+post
+	form data
+		appid: otn
+	response
+		{
+			"result_message":"验证通过",
+			"result_code":0,
+			"apptk":null,
+			"newapptk":"Y2e-6FF6qOecmrCoV-euz8vqArXDIVjDGs_CTOCEp40091110"
+		}
+	cookie	
+		uamtk=trkaznAXSWIbJlcuvOjbSiwXFnW1XIDyYV8w6sSpEAM091110; Path=/passport
+		
+https://kyfw.12306.cn/otn/uamauthclient
+post
+
+tk: Y2e-6FF6qOecmrCoV-euz8vqArXDIVjDGs_CTOCEp40091110
+	form data
+		tk: Y2e-6FF6qOecmrCoV-euz8vqArXDIVjDGs_CTOCEp40091110
+	response
+		{
+			"apptk":"Y2e-6FF6qOecmrCoV-euz8vqArXDIVjDGs_CTOCEp40091110",
+			"result_code":0,
+			"result_message":"验证通过",
+			"username":"许灿杰"
+		}
+		
+https://kyfw.12306.cn/otn/login/checkUser
+request cookie
+
+https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest
+
+https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs
+post
+	form data
+		REPEAT_SUBMIT_TOKEN: 0a06b10a05c5dfcac178a03fafb455fb
+
+
+https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo
+form data 
+	cancel_flag	2
+	bed_level_order_num	000000000000000000000000000000
+	passengerTicketStr	O,0,1,许灿杰,1,445281199508301071,13428108149,N
+	oldPassengerStr	许灿杰,1,445281199508301071,1_
+	tour_flag	dc
+	randCode	
+	whatsSelect	1
+	_json_att	
+	REPEAT_SUBMIT_TOKEN	0501bbd733d519cf7836efa1659b0731
+	
+	
+https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount
+form data
+	train_date	Tue+Apr+02+2019+00:00:00+GMT+0800+(中国标准时间)
+	train_no	6i000D23520D
+	stationTrainCode	D2352
+	seatType	O
+	fromStationTelecode	IOQ
+	toStationTelecode	PEQ
+	leftTicket	TxEPzPkYCPCK%2F0gnJoBQeyCnEtMliQz%2BsqnPf7vQhMWnxtSm
+	purpose_codes	00
+	train_location	Q9
+	_json_att	
+	REPEAT_SUBMIT_TOKEN	0501bbd733d519cf7836efa1659b0731
+	
+https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue
+form data
+	passengerTicketStr	O,0,1,许灿杰,1,445281199508301071,13428108149,N
+	oldPassengerStr	许灿杰,1,445281199508301071,1_
+	randCode	
+	purpose_codes	00
+	key_check_isChange	387925D4C578C9DCDFBA427D9037576F3889845CCE1247533ABC4FA6
+	leftTicketStr	TxEPzPkYCPCK%2F0gnJoBQeyCnEtMliQz%2BsqnPf7vQhMWnxtSm
+	train_location	Q9
+	choose_seats	
+	seatDetailType	000
+	whatsSelect	1
+	roomType	00
+	dwAll	N
+	_json_att	
+	REPEAT_SUBMIT_TOKEN	0501bbd733d519cf7836efa1659b0731
+
+	
+https://kyfw.12306.cn/otn/confirmPassenger/queryOrderWaitTime?
+	random=1551968100016&tourFlag=dc&_json_att=
+	&REPEAT_SUBMIT_TOKEN=0501bbd733d519cf7836efa1659b0731
+form data
+	random	1551968100016
+	tourFlag	dc
+	_json_att	
+	REPEAT_SUBMIT_TOKEN	0501bbd733d519cf7836efa1659b0731

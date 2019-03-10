@@ -61,13 +61,14 @@ post
 
 https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo
 form data 
-	cancel_flag	2
-	bed_level_order_num	000000000000000000000000000000
+	cancel_flag	2 					// 固定值 
+	bed_level_order_num	000000000000000000000000000000			// 固定值
 	passengerTicketStr	O,0,1,许灿杰,1,445281199508301071,13428108149,N
 	oldPassengerStr	许灿杰,1,445281199508301071,1_
 	tour_flag	dc
-	randCode	
-	whatsSelect	1
+	randCode		//	空值  
+	whatsSelect	1	//	0 勾选受让人
+					//	1 勾选常用联系人
 	_json_att	
 	REPEAT_SUBMIT_TOKEN	0501bbd733d519cf7836efa1659b0731
 	
@@ -102,7 +103,6 @@ form data
 	dwAll	N
 	_json_att	
 	REPEAT_SUBMIT_TOKEN	0501bbd733d519cf7836efa1659b0731
-
 	
 https://kyfw.12306.cn/otn/confirmPassenger/queryOrderWaitTime?
 	random=1551968100016&tourFlag=dc&_json_att=

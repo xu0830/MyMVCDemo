@@ -178,20 +178,6 @@ namespace MyMVCDemo.Controllers
 
             #endregion
 
-
-            //var client_7 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo");
-            //var request_7 = new RestRequest(Method.POST);
-            //request_7.AddHeader("cache-control", "no-cache");
-
-            //if (response_4.Cookies.Count > 0)
-            //{
-            //    foreach (var item in response_4.Cookies)
-            //    {
-            //        request_7.AddParameter(item.Name, item.Value, ParameterType.Cookie);
-            //    }
-            //}
-            //request_7.AddParameter("application/x-www-form-urlencoded", "cancel_flag=2&bed_level_order_num=000000000000000000000000000000&passengerTicketStr=O,0,1,许灿杰,1,445281199508301071,13428108149,N&oldPassengerStr=许灿杰,1,445281199508301071,1_&tour_flag=dc&randCode=&whatsSelect=1", ParameterType.RequestBody);
-            //IRestResponse response_7 = client_7.Execute(request_7);
             #region queryX
             var client_8 = new RestClient("https://kyfw.12306.cn/otn/leftTicket/queryX?leftTicketDTO.train_date=2019-04-08&leftTicketDTO.from_station=PEQ&leftTicketDTO.to_station=IOQ&purpose_codes=ADULT");
             var request_8 = new RestRequest(Method.GET);
@@ -201,30 +187,85 @@ namespace MyMVCDemo.Controllers
 
             TicketsResponse ticketsResponse = JsonConvert.DeserializeObject<TicketsResponse>(response_8.Content);
 
+            List<Ticket> tickets = new List<Ticket>();
+            foreach (var item in ticketsResponse.Data.Result)
+            {
+                var props = item.Split(',');
+                tickets.Add(new Ticket {
+                    SecretStr = props[0],
+                    ButtonTextInfo = props[1],
+                    Train_no = props[2],
+                    Station_train_code = props[3],
+                    Start_station_telecode = props[4],
+                    End_station_telecode = props[5],
+                    From_station_telecode = props[6],
+                    To_station_telecode = props[7],
+                    Start_time = props[8],
+                    Arrive_time = props[9],
+                    Lishi = props[10],
+                    CanWebBuy = props[11],
+                    Yp_info = props[12],
+                    Start_train_data = props[13],
+                    Train_seat_feature = props[14],
+                    Location_code = props[15],
+                    From_station_no = props[16],
+                    To_station_no = props[17],
+                    Is_support_card = props[18],
+                    Controlled_train_flag = props[19],
+                    Gg_num = props[20],
+                    Gr_num = props[21],
+                    Qt_num = props[22],
+                    Rw_num = props[23],
+                    Rz_num = props[24],
+                    Tz_num = props[25],
+                    Wz_num = props[26],
+                    Yb_num = props[27],
+                    Yw_num = props[28],
+                    Yz_num = props[29],
+                    Ze_num = props[30],
+                    Zy_num = props[31],
+                    Swz_num = props[32],
+                    Srrb_num = props[33],
+                    Yp_ex = props[34],
+                    Seat_types = props[35],
+                    Exchange_train_flag = props[36],
+                    Houbu_train_flag = props[37],
+                    Houbu_seat_limit = props[38],
+                    From_station_name = props[39],
+                    To_station_name = props[40]
+                });
+            }
             #endregion
 
             #region submitOrderRequest
-            //var client_9 = new RestClient("https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest");
-            //var request_9 = new RestRequest(Method.POST);
-            //request_9.AddHeader("cache-control", "no-cache");
-            //request_9.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            var client_9 = new RestClient("https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest");
+            var request_9 = new RestRequest(Method.POST);
+            request_9.AddHeader("cache-control", "no-cache");
+            request_9.AddHeader("Content-Type", "application/x-www-form-urlencoded");
 
-            //request_9.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
-            //request_9.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
-            //request_9.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
-            //request_9.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
-            //request_9.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
+            request_9.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
+            request_9.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
+            request_9.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
+            request_9.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
+            request_9.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
 
-            //if (response_4.Cookies.Count > 0)
-            //{
-            //    foreach (var item in response_4.Cookies)
-            //    {
-            //        request_9.AddParameter(item.Name, item.Value, ParameterType.Cookie);
-            //    }
-            //}
+            if (response_4.Cookies.Count > 0)
+            {
+                foreach (var item in response_4.Cookies)
+                {
+                    request_9.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+                }
+            }
 
-            //request_9.AddParameter("application/x-www-form-urlencoded", "secretStr=ZDtIkE7Dcd1s6BzhF3ti6uSMq0x5j5zikNlIKG5GWX03FqjjPX1hZopqQbvD%2BBGUuejJdJnWX%2FS0%0AS1wV2Ao6drdvNpUK8c6UDtCaw7HUAziVktG8OkWLYzJWVXJqLGeOUqc7u2VztJcf%2B3utdjRKA4Sh%0A3OfHPuGK%2FSYE64PCdHsSdmeguVVEF3snCm4YjiABtZ2o3IJ9T7AbwQYJq2A0QJbzBex7LjDmDHHt%0AYktO6ivju7rbilL0smyVz%2Be4Z9h1oot8vDho5lp3ymGNjoceOyePqG1s7UdhLa1d4v8c9tY%3D&train_date=2019-04-08&back_train_date=2019-03-11&tour_flag=dc&purpose_codes=ADULT&query_from_station_name=深圳北&query_to_station_name=普宁&undefined", ParameterType.RequestBody);
-            //IRestResponse response_9 = client_9.Execute(request_9);
+            request_9.AddParameter("application/x-www-form-urlencoded", 
+                "secretStr=ZDtIkE7Dcd1s6BzhF3ti6uSMq0x5j5zikNlIKG5GWX03FqjjPX1hZopqQbvD%2BBGUuejJdJn" +
+                "WX%2FS0%0AS1wV2Ao6drdvNpUK8c6UDtCaw7HUAziVktG8OkWLYzJWVXJqLGeOUqc7u2VztJcf%2B3utdjRKA4" +
+                "Sh%0A3OfHPuGK%2FSYE64PCdHsSdmeguVVEF3snCm4YjiABtZ2o3IJ9T7AbwQYJq2A0QJbzBex7LjDmDHH" +
+                "t%0AYktO6ivju7rbilL0smyVz%2Be4Z9h1oot8vDho5lp3ymGNjoceOyePqG1s7UdhLa1d4v8c9tY%3D" +
+                "&train_date=2019-04-08&back_train_date=2019-03-11&tour_flag=dc&purpose_codes=ADULT" +
+                "&query_from_station_name=深圳北&query_to_station_name=普宁&undefined",
+                ParameterType.RequestBody);
+            IRestResponse response_9 = client_9.Execute(request_9);
             #endregion
 
             #region checkOrderInfo
@@ -662,9 +703,53 @@ namespace MyMVCDemo.Controllers
     {
         public int Flag { get; set; }
 
-        public object map { get; set; }
+        public object Map { get; set; }
 
-        public List<string> result { get; set; }
+        public List<string> Result { get; set; }
     }
 
+    public class Ticket
+    {
+        public string SecretStr { get; set; }
+        public string ButtonTextInfo { get; set; }
+        public string Train_no { get; set; }
+        public string Station_train_code { get; set; }
+        public string Start_station_telecode { get; set; }
+        public string End_station_telecode { get; set; }
+        public string From_station_telecode { get; set; }
+        public string To_station_telecode { get; set; }
+        public string Start_time { get; set; }
+        public string Arrive_time { get; set; }
+        public string Lishi { get; set; }
+        public string CanWebBuy { get; set; }
+        public string Yp_info { get; set; }
+        public string Start_train_data { get; set; }
+        public string Train_seat_feature { get; set; }
+        public string Location_code { get; set; }
+        public string From_station_no { get; set; }
+        public string To_station_no { get; set; }
+        public string Is_support_card { get; set; }
+        public string Controlled_train_flag { get; set; }
+        public string Gg_num { get; set; }
+        public string Gr_num { get; set; }
+        public string Qt_num { get; set; }
+        public string Rw_num { get; set; }
+        public string Rz_num { get; set; }
+        public string Tz_num { get; set; }
+        public string Wz_num { get; set; }
+        public string Yb_num { get; set; }
+        public string Yw_num { get; set; }
+        public string Yz_num { get; set; }
+        public string Ze_num { get; set; }
+        public string Zy_num { get; set; }
+        public string Swz_num { get; set; }
+        public string Srrb_num { get; set; }
+        public string Yp_ex { get; set; }
+        public string Seat_types { get; set; }
+        public string Exchange_train_flag { get; set; }
+        public string Houbu_train_flag { get; set; }
+        public string Houbu_seat_limit { get; set; }
+        public string From_station_name { get; set; }
+        public string To_station_name { get; set; }
+    }
 }

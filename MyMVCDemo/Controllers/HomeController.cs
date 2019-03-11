@@ -32,12 +32,7 @@ namespace MyMVCDemo.Controllers
             //string data = HttpHelper.SendPostRequest("http://120.77.254.201:8085/Handlers/Default/BankFinanceHandler.ashx/?method=GetBankFundsWithInitFundsConditional", "TraderID=" + traderId, new CookieContainer(), HttpHelper.header);
             //ViewBag.Data = data;
 
-            var client = new RestClient("https://kyfw.12306.cn/otn/leftTicket/queryX?leftTicketDTO.train_date=2019-03-03&leftTicketDTO.from_station=PEQ&leftTicketDTO.to_station=IOQ&purpose_codes=ADULT");
-            var request = new RestRequest(Method.GET);
-            request.AddHeader("Postman-Token", "fbcf73a7-c5b5-459c-8a1c-c324b4400e40");
-            request.AddHeader("cache-control", "no-cache");
-            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
-            IRestResponse response = client.Execute(request);
+           
 
             return View();
         }
@@ -182,6 +177,107 @@ namespace MyMVCDemo.Controllers
             IRestResponse response_6 = client_6.Execute(request_6);
 
             #endregion
+
+
+            //var client_7 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo");
+            //var request_7 = new RestRequest(Method.POST);
+            //request_7.AddHeader("cache-control", "no-cache");
+
+            //if (response_4.Cookies.Count > 0)
+            //{
+            //    foreach (var item in response_4.Cookies)
+            //    {
+            //        request_7.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+            //    }
+            //}
+            //request_7.AddParameter("application/x-www-form-urlencoded", "cancel_flag=2&bed_level_order_num=000000000000000000000000000000&passengerTicketStr=O,0,1,许灿杰,1,445281199508301071,13428108149,N&oldPassengerStr=许灿杰,1,445281199508301071,1_&tour_flag=dc&randCode=&whatsSelect=1", ParameterType.RequestBody);
+            //IRestResponse response_7 = client_7.Execute(request_7);
+            #region queryX
+            var client_8 = new RestClient("https://kyfw.12306.cn/otn/leftTicket/queryX?leftTicketDTO.train_date=2019-04-08&leftTicketDTO.from_station=PEQ&leftTicketDTO.to_station=IOQ&purpose_codes=ADULT");
+            var request_8 = new RestRequest(Method.GET);
+            request_8.AddHeader("cache-control", "no-cache");
+            request_8.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            IRestResponse response_8 = client_8.Execute(request_8);
+
+            TicketsResponse ticketsResponse = JsonConvert.DeserializeObject<TicketsResponse>(response_8.Content);
+
+            #endregion
+
+            #region submitOrderRequest
+            //var client_9 = new RestClient("https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest");
+            //var request_9 = new RestRequest(Method.POST);
+            //request_9.AddHeader("cache-control", "no-cache");
+            //request_9.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            //request_9.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
+            //request_9.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
+            //request_9.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
+            //request_9.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
+            //request_9.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
+
+            //if (response_4.Cookies.Count > 0)
+            //{
+            //    foreach (var item in response_4.Cookies)
+            //    {
+            //        request_9.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+            //    }
+            //}
+
+            //request_9.AddParameter("application/x-www-form-urlencoded", "secretStr=ZDtIkE7Dcd1s6BzhF3ti6uSMq0x5j5zikNlIKG5GWX03FqjjPX1hZopqQbvD%2BBGUuejJdJnWX%2FS0%0AS1wV2Ao6drdvNpUK8c6UDtCaw7HUAziVktG8OkWLYzJWVXJqLGeOUqc7u2VztJcf%2B3utdjRKA4Sh%0A3OfHPuGK%2FSYE64PCdHsSdmeguVVEF3snCm4YjiABtZ2o3IJ9T7AbwQYJq2A0QJbzBex7LjDmDHHt%0AYktO6ivju7rbilL0smyVz%2Be4Z9h1oot8vDho5lp3ymGNjoceOyePqG1s7UdhLa1d4v8c9tY%3D&train_date=2019-04-08&back_train_date=2019-03-11&tour_flag=dc&purpose_codes=ADULT&query_from_station_name=深圳北&query_to_station_name=普宁&undefined", ParameterType.RequestBody);
+            //IRestResponse response_9 = client_9.Execute(request_9);
+            #endregion
+
+            #region checkOrderInfo
+            //var client_10 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo");
+            //var request_10 = new RestRequest(Method.POST);
+            //request_10.AddHeader("cache-control", "no-cache");
+            //request_10.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            ///*
+            // JSESSIONID=FE01F4D22F6A35363D3C014B46E81F2F; tk=c6pnEqHHx0ElR-qoQlbloOyzL3mjPxx_bqCgcvKW9fUrw1110; _jc_save_fromStation=%u6DF1%u5733%u5317%2CIOQ; _jc_save_toStation=%u666E%u5B81%2CPEQ; _jc_save_toDate=2019-03-11; _jc_save_wfdc_flag=dc; _jc_save_showIns=true; _jc_save_fromDate=2019-04-08; route=495c805987d0f5c8c84b14f60212447d; BIGipServerotn=1911030026.64545.0000; BIGipServerpassport=854065418.50215.0000; RAIL_EXPIRATION=1552603263927; RAIL_DEVICEID=MGTpdzilk3O2vDSrYhq6fGyNjCJ6PuNe0cVHN3Kuq24w6e096t4ae4Eei9AhCq4UR1zSdKCmmoms8XECjwEqKua7gujy6kxweVnD3JCumvFeexj-L2rlx8jUA6M-3GQki-cNPCzOA18WgUUcl0mHe-ChU_QdsV_B
+            // */
+
+            //request_10.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
+            //request_10.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
+            //request_10.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
+            //request_10.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
+            //request_10.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
+            //request_10.AddParameter("_jc_save_showIns", "true", ParameterType.Cookie);
+            //request_10.AddParameter("application/x-www-form-urlencoded", "cancel_flag=2& bed_level_order_num=000000000000000000000000000000&passengerTicketStr=M,0,1,许灿杰,1,445281199508301071,13428108149,N&oldPassengerStr=许灿杰,1,445281199508301071,1_&tour_flag=dc&randCode=&whatsSelect=1", ParameterType.RequestBody);
+            //if (response_4.Cookies.Count > 0)
+            //{
+            //    foreach (var item in response_4.Cookies)
+            //    {
+            //        request_10.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+            //    }
+            //}
+            //IRestResponse response_10 = client_10.Execute(request_10);
+            #endregion
+
+
+            #region getQueueCount
+            //var client_7 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount");
+            //var request_7 = new RestRequest(Method.POST);
+            //request_7.AddHeader("cache-control", "no-cache");
+
+            //if (response_4.Cookies.Count > 0)
+            //{
+            //    foreach (var item in response_4.Cookies)
+            //    {
+            //        request_7.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+            //    }
+            //}
+            //request_7.AddParameter("_jc_save_fromDate", "2019-04-09", ParameterType.Cookie);
+            //request_7.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
+            //request_7.AddParameter("_jc_save_toDate", "2019-04-09", ParameterType.Cookie);
+            //request_7.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
+            //request_7.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
+
+            //request_7.AddParameter("application/x-www-form-urlencoded", "train_date=Sat Apr 06 2019 00:00:00 GMT+0800 (中国标准时间)&train_no=6i000D31080C&stationTrainCode=D3108&seatType=0&fromStationTelecode=IOQ&toStationTelecode=KTQ&leftTicket=Yv936dbd%2Fw4wX06DFNrktl2ZOT1Sflb%2Bxa888uF1ojMSJ0Yn&purpose_codes=00&train_location=QY", ParameterType.RequestBody);
+            //IRestResponse response_7 = client_7.Execute(request_7);
+            #endregion
+
+
 
 
 
@@ -549,6 +645,26 @@ namespace MyMVCDemo.Controllers
         public string Result_message { get; set; }
         public string Result_code { get; set; }
         public string Image { get; set; }
+    }
+
+    public class TicketsResponse
+    {
+        public int Httpstatus { get; set; }
+
+        public string Messages { get; set; }
+
+        public bool Status { get; set; }
+
+        public TicketModel Data { get; set; }
+    }
+
+    public class TicketModel
+    {
+        public int Flag { get; set; }
+
+        public object map { get; set; }
+
+        public List<string> result { get; set; }
     }
 
 }

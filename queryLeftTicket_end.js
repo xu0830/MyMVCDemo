@@ -1792,33 +1792,53 @@ var isInitLoad = true;
 			}
 			
 			//	一等座
-			cs(cQ, cL[cM].queryLeftNewDTO.zy_num, "ZY_", cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "M1", cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+			cs(cQ, cL[cM].queryLeftNewDTO.zy_num, "ZY_",
+				cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "M1", 
+				cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
 			//	二等座
-			cs(cQ, cL[cM].queryLeftNewDTO.ze_num, "ZE_", cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "O1", cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+			cs(cQ, cL[cM].queryLeftNewDTO.ze_num, "ZE_",
+				cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "O1",
+				cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
 
 			//	高级软卧
-			cs(cQ, cL[cM].queryLeftNewDTO.gr_num, "GR_", cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "61", cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+			cs(cQ, cL[cM].queryLeftNewDTO.gr_num, "GR_", 
+				cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "61",
+				cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
 			
 			//	软卧一等卧
-			cs(cQ, cL[cM].queryLeftNewDTO.rw_num, "RW_", cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "41", cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+			cs(cQ, cL[cM].queryLeftNewDTO.rw_num, "RW_", 
+				cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "41",
+				cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
 			
 			//	动卧
-			cs(cQ, cL[cM].queryLeftNewDTO.srrb_num, "SRRB_", cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "F1", cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+			cs(cQ, cL[cM].queryLeftNewDTO.srrb_num, "SRRB_",
+				cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "F1",
+				cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
 			
 			//	硬卧二等卧
-			cs(cQ, cL[cM].queryLeftNewDTO.yw_num, "YW_", cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "31", cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+			cs(cQ, cL[cM].queryLeftNewDTO.yw_num, "YW_", 
+				cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "31", 
+				cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
 			
 			//	软座
-			cs(cQ, cL[cM].queryLeftNewDTO.rz_num, "RZ_", cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "21", cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+			cs(cQ, cL[cM].queryLeftNewDTO.rz_num, "RZ_",
+				cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "21", 
+				cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
 
 			//	硬座
-			cs(cQ, cL[cM].queryLeftNewDTO.yz_num, "YZ_", cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "11", cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+			cs(cQ, cL[cM].queryLeftNewDTO.yz_num, "YZ_", 
+				cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "11",
+				cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
 			
 			//	无座
-			cs(cQ, cL[cM].queryLeftNewDTO.wz_num, "WZ_", cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "W1", cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+			cs(cQ, cL[cM].queryLeftNewDTO.wz_num, "WZ_", 
+				cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "W1", 
+				cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
 			
 			//	其他
-			cs(cQ, cL[cM].queryLeftNewDTO.qt_num, "QT_", cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "", cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+			cs(cQ, cL[cM].queryLeftNewDTO.qt_num, "QT_",
+				cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "",
+				cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
 			
 			if ("Y" == cL[cM].queryLeftNewDTO.canWebBuy) {
 				cQ.push(' <td align="center" width="80" class="no-br"><a href="javascript:" class="btn72" onclick="checkG1234(\'');
@@ -1957,6 +1977,8 @@ var isInitLoad = true;
 		}
 		return false
 	}
+	//	other_buy_date "2019-03-12&2019-04-10"
+	//	判断日期是否合法
 	function b0(cQ) {
 		var cM = new Date();
 		cM.setHours(cM.getHours() + 3);
@@ -1972,6 +1994,7 @@ var isInitLoad = true;
 		}
 		return true
 	}
+	//	aq(0) 日期拼接
 	function aq(cM) {
 		var cN = "";
 		var cL = new Date();
@@ -2034,14 +2057,20 @@ var isInitLoad = true;
 		}
 		return ""
 	}
+	/*
+		cs(cQ, cL[cM].queryLeftNewDTO.zy_num, "ZY_",
+			cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "M1", 
+			cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+	*/
 	function cs(cU, c8, c4, cZ, c5, cW, cS, cV) {
 		var cN = cV.queryLeftNewDTO;
-		var cQ = $("#train_date").val() + "#" + cN.from_station_telecode + "#" + cN.to_station_telecode + "#" + cN.train_no + "#" 
-			+ c4 + "#" + cN.from_station_no + "#" + cN.from_station_name + "#" + cN.to_station_no + "#" + cN.to_station_name + "#"
+		var cQ = $("#train_date").val() + "#" + cN.from_station_telecode + "#" + cN.to_station_telecode
+			+ "#" + cN.train_no + "#" + c4 + "#" + cN.from_station_no + "#" + cN.from_station_name 
+			+ "#" + cN.to_station_no + "#" + cN.to_station_name + "#" 
 			+ cV.secretStr + "#" + cN.station_train_code + "#";
 		var cM = $("#train_date").val() + "#" + cN.train_no + "#" + c4 + "#";
 		var cY = "";
-		var c0 = b0($("#train_date").val() + " " + cN.start_time);
+		var c0 = b0($("#train_date").val() + " " + cN.start_time);// 判断日期是否合法	
 		if ($("#train_date").val() == aq(0)) {
 			c0 = false
 		}
@@ -2966,6 +2995,7 @@ var isInitLoad = true;
 			if (cS) {
 				cP = stu_buy_date.split("&")
 			} else {
+				//	other_buy_date  "2019-03-12&2019-04-10"
 				cP = other_buy_date.split("&")
 			}
 			if (cP.length > 0) {

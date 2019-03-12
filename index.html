@@ -198,9 +198,13 @@
 		if(ci(response.data)){
 			data = cz(data);
 		}
-		data.map(function(item){
-			console.log(item);
-		});
+		<!-- data.map(function(item){ -->
+			<!-- console.log(item); -->
+		<!-- }); -->
+		
+		var date = new Date();
+		date.setDate(date.getDate() + 0);
+		console.log((date.getMonth() + 1));
 	</script>
 </body>
 </html>

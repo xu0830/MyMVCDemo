@@ -190,8 +190,9 @@ namespace MyMVCDemo.Controllers
             List<Ticket> tickets = new List<Ticket>();
             foreach (var item in ticketsResponse.Data.Result)
             {
-                var props = item.Split(',');
-                tickets.Add(new Ticket {
+                var props = item.Split('|');
+                Ticket ticket = new Ticket()
+                {
                     SecretStr = props[0],
                     ButtonTextInfo = props[1],
                     Train_no = props[2],
@@ -230,10 +231,12 @@ namespace MyMVCDemo.Controllers
                     Seat_types = props[35],
                     Exchange_train_flag = props[36],
                     Houbu_train_flag = props[37],
-                    Houbu_seat_limit = props[38],
-                    From_station_name = props[39],
-                    To_station_name = props[40]
-                });
+                };
+                if (props.Length > 38)
+                {
+                    ticket.Houbu_seat_limit = props[38];
+                }
+                tickets.Add(ticket);
             }
             #endregion
 
@@ -295,7 +298,6 @@ namespace MyMVCDemo.Controllers
             //IRestResponse response_10 = client_10.Execute(request_10);
             #endregion
 
-
             #region getQueueCount
             //var client_7 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount");
             //var request_7 = new RestRequest(Method.POST);
@@ -317,10 +319,6 @@ namespace MyMVCDemo.Controllers
             //request_7.AddParameter("application/x-www-form-urlencoded", "train_date=Sat Apr 06 2019 00:00:00 GMT+0800 (中国标准时间)&train_no=6i000D31080C&stationTrainCode=D3108&seatType=0&fromStationTelecode=IOQ&toStationTelecode=KTQ&leftTicket=Yv936dbd%2Fw4wX06DFNrktl2ZOT1Sflb%2Bxa888uF1ojMSJ0Yn&purpose_codes=00&train_location=QY", ParameterType.RequestBody);
             //IRestResponse response_7 = client_7.Execute(request_7);
             #endregion
-
-
-
-
 
             return Json(new
             {
@@ -710,7 +708,13 @@ namespace MyMVCDemo.Controllers
 
     public class Ticket
     {
+        /// <summary>
+        /// 车票密文
+        /// </summary>
         public string SecretStr { get; set; }
+        /// <summary>
+        /// 按钮提示文字
+        /// </summary>
         public string ButtonTextInfo { get; set; }
         public string Train_no { get; set; }
         public string Station_train_code { get; set; }

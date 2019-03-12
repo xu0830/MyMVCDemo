@@ -1,0 +1,79 @@
+from_station_name 
+to_station_name
+secretStr "QqIwEUNFz9prkN4JNZCKPTeGfoN4jX%2BNzS%2Fb76Ks4XN9Nlrg%2FhXBuWd9mTC8sN2xwabiAdbrIaQr%0ANEqLgGVHUXu6C%2BBMzUEDw1YCqkDPQX%2B6NIdT0IS2fqVmfvdaBP1xRCYDDlQK%2F8b3U%2Fp0xT0iiUgH%0AAV9F4ADqjBDdP9MpQWuxa6DdtSLtODFGGdOS%2FkmW2pMxrcfT5%2Bru7yJrw6Cexi4ObcPQ1oPSuXiG%0AMa5xVtunNdr4Pe5zKIz1DG1uv4VkphiTqKpbQIq7dRyD0BBXyxggQUiqFnRb8R9ncHvY%2FBQ%3D
+|
+buttonTextInfo 预订
+|
+train_no 6i0000D68206
+|
+station_train_code D682
+|
+start_station_telecode IOQ
+|
+end_station_telecode XKS
+|
+from_station_telecode IOQ
+|
+to_station_telecode PEQ
+|
+start_time 06:40
+|
+arrive_time 08:08
+|
+lishi 01:28
+|
+canWebBuy Y
+|
+yp_info d7Hc86hR165Up8eWshaqXrOXAvgdFeRuoHX9yzcfO6GjMWXV
+|
+start_train_date 20190408
+|
+train_seat_feature 3
+|
+location_code Q9
+|
+from_station_no 01
+|
+to_station_no 02
+|
+is_support_card 1
+|
+controlled_train_flag 0
+|
+gg_num --
+|
+gr_num
+|
+qt_num
+|
+rw_num
+|
+rz_num
+|
+tz_num
+|
+wz_num 无
+|
+yb_num
+|
+yw_num
+|
+yz_num
+|
+ze_num 有
+|
+zy_num 有
+|
+swz_num
+|
+srrb_num
+|
+yp_ex O0M0O0
+|
+seat_types OMO
+|
+exchange_train_flag 0
+|
+houbu_train_flag 0
+|
+houbu_seat_limit null"

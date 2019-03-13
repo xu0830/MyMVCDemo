@@ -193,18 +193,139 @@
 			"messages": "",
 			"status": true
 		};
+		
+		var ticket_seat_codeMap = {
+	'3': [{
+			'end_station_name': null,
+			'end_time': null,
+			'id': 'O',
+			'start_station_name': null,
+			'start_time': null,
+			'value': '\u4E8C\u7B49\u5EA7'
+		}
+	],
+	'2': [{
+			'end_station_name': null,
+			'end_time': null,
+			'id': 'M',
+			'start_station_name': null,
+			'start_time': null,
+			'value': '\u4E00\u7B49\u5EA7'
+		}, {
+			'end_station_name': null,
+			'end_time': null,
+			'id': 'O',
+			'start_station_name': null,
+			'start_time': null,
+			'value': '\u4E8C\u7B49\u5EA7'
+		}
+	],
+	'1': [{
+			'end_station_name': null,
+			'end_time': null,
+			'id': 'M',
+			'start_station_name': null,
+			'start_time': null,
+			'value': '\u4E00\u7B49\u5EA7'
+		}, {
+			'end_station_name': null,
+			'end_time': null,
+			'id': 'O',
+			'start_station_name': null,
+			'start_time': null,
+			'value': '\u4E8C\u7B49\u5EA7'
+		}
+	],
+	'4': [{
+			'end_station_name': null,
+			'end_time': null,
+			'id': 'M',
+			'start_station_name': null,
+			'start_time': null,
+			'value': '\u4E00\u7B49\u5EA7'
+		}, {
+			'end_station_name': null,
+			'end_time': null,
+			'id': 'O',
+			'start_station_name': null,
+			'start_time': null,
+			'value': '\u4E8C\u7B49\u5EA7'
+		}
+	]
+};
+		
+		var defaultTicketTypes = [{
+		'end_station_name': null,
+		'end_time': null,
+		'id': '1',
+		'start_station_name': null,
+		'start_time': null,
+		'value': '\u6210\u4EBA\u7968'
+	}, {
+		'end_station_name': null,
+		'end_time': null,
+		'id': '2',
+		'start_station_name': null,
+		'start_time': null,
+		'value': '\u513F\u7AE5\u7968'
+	}, {
+		'end_station_name': null,
+		'end_time': null,
+		'id': '3',
+		'start_station_name': null,
+		'start_time': null,
+		'value': '\u5B66\u751F\u7968'
+	}, {
+		'end_station_name': null,
+		'end_time': null,
+		'id': '4',
+		'start_station_name': null,
+		'start_time': null,
+		'value': '\u6B8B\u519B\u7968'
+	}
+];
+		
+		function P(aA, aD) {
+		var aE = new Array();
+		for (var aC in aA) {
+			for (var aB in aD) {
+				if (aD[aB].id == aC) {
+					aE.push(aD[aB]);
+					break
+				}
+			}
+		}
+		aE = aE.sort(function (aG, aF) {
+				if (aF.id > aG.id) {
+					return -1
+				} else {
+					if (aF.id == aG.id) {
+						return 0
+					} else {
+						return 1
+					}
+				}
+			});
+		return aE
+	}
+		console.log(P(ticket_seat_codeMap, defaultTicketTypes));
+		
+		
 		var data = cp(response.data.result, response.data.map);
 		a7(response.data);
 		if(ci(response.data)){
 			data = cz(data);
 		}
-		<!-- data.map(function(item){ -->
-			<!-- console.log(item); -->
-		<!-- }); -->
+		data.map(function(item){
+			<!-- console.log(item.queryLeftNewDTO.train_no); -->
+		});
 		
-		var date = new Date();
-		date.setDate(date.getDate() + 0);
-		console.log((date.getMonth() + 1));
+		function constructor(){
+			this.name = "name";
+			this.flag = this.name == "" ? true : false;
+		}
+		
+		
 	</script>
 </body>
 </html>

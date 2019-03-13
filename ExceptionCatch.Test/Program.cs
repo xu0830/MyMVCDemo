@@ -11,14 +11,8 @@ namespace ExceptionCatch.Test
     {
         static void Main(string[] args)
         {
-            try
-            {
-                ExceptionSource.ThrowException();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("catch exception");
-            }
+            String content = "'{content}'";
+            Console.WriteLine(content.Substring(content.IndexOf("'")+1, content.LastIndexOf("'")-content.IndexOf("'")-1));
         }
     }
 }

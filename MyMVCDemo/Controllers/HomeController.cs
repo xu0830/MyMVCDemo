@@ -32,7 +32,7 @@ namespace MyMVCDemo.Controllers
             //string data = HttpHelper.SendPostRequest("http://120.77.254.201:8085/Handlers/Default/BankFinanceHandler.ashx/?method=GetBankFundsWithInitFundsConditional", "TraderID=" + traderId, new CookieContainer(), HttpHelper.header);
             //ViewBag.Data = data;
 
-           
+
 
             return View();
         }
@@ -138,7 +138,7 @@ namespace MyMVCDemo.Controllers
             IRestResponse response_3 = client_3.Execute(request_3);
 
             ResponseModel responseModel = JsonConvert.DeserializeObject<ResponseModel>(response_3.Content);
-   
+
             var client_4 = new RestClient("https://kyfw.12306.cn/otn/uamauthclient");
             var request_4 = new RestRequest(Method.POST);
             request_4.AddHeader("cache-control", "no-cache");
@@ -162,24 +162,8 @@ namespace MyMVCDemo.Controllers
             IRestResponse response_5 = client_5.Execute(request_5);
             #endregion
 
-            #region 获取乘客信息
-            var client_6 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs");
-            var request_6 = new RestRequest(Method.POST);
-            request_6.AddHeader("cache-control", "no-cache");
-
-            if (response_4.Cookies.Count > 0)
-            {
-                foreach (var item in response_4.Cookies)
-                {
-                    request_6.AddParameter(item.Name, item.Value, ParameterType.Cookie);
-                }
-            }
-            IRestResponse response_6 = client_6.Execute(request_6);
-
-            #endregion
-
             #region queryX
-            var client_8 = new RestClient("https://kyfw.12306.cn/otn/leftTicket/queryX?leftTicketDTO.train_date=2019-04-08&leftTicketDTO.from_station=PEQ&leftTicketDTO.to_station=IOQ&purpose_codes=ADULT");
+            var client_8 = new RestClient("https://kyfw.12306.cn/otn/leftTicket/queryX?leftTicketDTO.train_date=2019-04-08&leftTicketDTO.from_station=IOQ&leftTicketDTO.to_station=PEQ&purpose_codes=ADULT");
             var request_8 = new RestRequest(Method.GET);
             request_8.AddHeader("cache-control", "no-cache");
             request_8.AddHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -241,6 +225,7 @@ namespace MyMVCDemo.Controllers
             #endregion
 
             #region submitOrderRequest
+
             var client_9 = new RestClient("https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest");
             var request_9 = new RestRequest(Method.POST);
             request_9.AddHeader("cache-control", "no-cache");
@@ -260,42 +245,119 @@ namespace MyMVCDemo.Controllers
                 }
             }
 
-            request_9.AddParameter("application/x-www-form-urlencoded", 
-                "secretStr=ZDtIkE7Dcd1s6BzhF3ti6uSMq0x5j5zikNlIKG5GWX03FqjjPX1hZopqQbvD%2BBGUuejJdJn" +
-                "WX%2FS0%0AS1wV2Ao6drdvNpUK8c6UDtCaw7HUAziVktG8OkWLYzJWVXJqLGeOUqc7u2VztJcf%2B3utdjRKA4" +
-                "Sh%0A3OfHPuGK%2FSYE64PCdHsSdmeguVVEF3snCm4YjiABtZ2o3IJ9T7AbwQYJq2A0QJbzBex7LjDmDHH" +
-                "t%0AYktO6ivju7rbilL0smyVz%2Be4Z9h1oot8vDho5lp3ymGNjoceOyePqG1s7UdhLa1d4v8c9tY%3D" +
-                "&train_date=2019-04-08&back_train_date=2019-03-11&tour_flag=dc&purpose_codes=ADULT" +
+            request_9.AddParameter("application/x-www-form-urlencoded",
+                "secretStr=" +
+                tickets[3].SecretStr +
+                "&train_date=2019-04-08&back_train_date=2019-04-08&tour_flag=dc&purpose_codes=ADULT" +
                 "&query_from_station_name=深圳北&query_to_station_name=普宁&undefined",
                 ParameterType.RequestBody);
             IRestResponse response_9 = client_9.Execute(request_9);
+
             #endregion
 
+    
+            #region logdevice
+            var client_12 = new RestClient("https://kyfw.12306.cn/otn/HttpZF/logdevice");
+            var request_12 = new RestRequest(Method.GET);
+            IRestResponse response_12 = client_12.Execute(request_12);
+            StringBuilder builder = new StringBuilder();
+            String content = builder.Append(response_12.Content.Substring(response_12.Content.IndexOf("'") + 1, response_12.Content.LastIndexOf("'") - response_12.Content.IndexOf("'") - 1)).ToString();
+
+            CallBackFunction callBackFunction = JsonConvert.DeserializeObject<CallBackFunction>(content);
+            #endregion
+
+            #region https://kyfw.12306.cn/otn/confirmPassenger/initWc
+            var client_13 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/initWc");
+            var request_13 = new RestRequest(Method.POST);
+            request_13.AddHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*; q=0.8");
+            request_13.AddHeader("Accept-Encoding", "gzip, deflate, br");
+            request_13.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
+            request_13.AddHeader("Cache-Control", "max-age=0");
+            request_13.AddHeader("Connection", "keep-alive");
+            request_13.AddHeader("Content-Length", "10");
+            request_13.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            request_13.AddHeader("Host", "kyfw.12306.cn");
+            request_13.AddHeader("Origin", "https://kyfw.12306.cn");
+            request_13.AddHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc");
+            request_13.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
+            request_13.AddHeader("Upgrade-Insecure-Requests", "1");
+
+            request_13.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
+            request_13.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
+            request_13.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
+            request_13.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
+            request_13.AddParameter("_jc_save_showIns", "true", ParameterType.Cookie);
+            request_13.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
+            if (response_4.Cookies.Count > 0)
+            {
+                foreach (var item in response_4.Cookies)
+                {
+                    request_13.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+                }
+            }
+
+            IRestResponse response_13 = client_13.Execute(request_13);
+
+            var flag = response_13.Content.IndexOf("ticketInfoForPassengerForm");
+            #endregion
+
+            #region getPassengerDTOs 获取乘客信息
+            var client_10 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs");
+            var request_10 = new RestRequest(Method.POST);
+            request_10.AddHeader("cache-control", "no-cache");
+            request_10.AddHeader("Host", "kyfw.12306.cn");
+            request_10.AddHeader("Origin", "https://kyfw.12306.cn");
+            request_10.AddHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
+
+            request_10.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
+            request_10.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
+            request_10.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
+            request_10.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
+            request_10.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
+            if (response_4.Cookies.Count > 0)
+            {
+                foreach (var item in response_4.Cookies)
+                {
+                    request_10.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+                }
+            }
+            IRestResponse response_10 = client_10.Execute(request_10);
+
+            PassengerDTOResponse passengerDTOResponse = JsonConvert.DeserializeObject<PassengerDTOResponse>(response_10.Content);
+
+            #endregion
+
+
             #region checkOrderInfo
-            //var client_10 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo");
-            //var request_10 = new RestRequest(Method.POST);
-            //request_10.AddHeader("cache-control", "no-cache");
-            //request_10.AddHeader("Content-Type", "application/x-www-form-urlencoded");
 
-            ///*
-            // JSESSIONID=FE01F4D22F6A35363D3C014B46E81F2F; tk=c6pnEqHHx0ElR-qoQlbloOyzL3mjPxx_bqCgcvKW9fUrw1110; _jc_save_fromStation=%u6DF1%u5733%u5317%2CIOQ; _jc_save_toStation=%u666E%u5B81%2CPEQ; _jc_save_toDate=2019-03-11; _jc_save_wfdc_flag=dc; _jc_save_showIns=true; _jc_save_fromDate=2019-04-08; route=495c805987d0f5c8c84b14f60212447d; BIGipServerotn=1911030026.64545.0000; BIGipServerpassport=854065418.50215.0000; RAIL_EXPIRATION=1552603263927; RAIL_DEVICEID=MGTpdzilk3O2vDSrYhq6fGyNjCJ6PuNe0cVHN3Kuq24w6e096t4ae4Eei9AhCq4UR1zSdKCmmoms8XECjwEqKua7gujy6kxweVnD3JCumvFeexj-L2rlx8jUA6M-3GQki-cNPCzOA18WgUUcl0mHe-ChU_QdsV_B
-            // */
+            var client_11 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo");
+            var request_11 = new RestRequest(Method.POST);
+            request_11.AddHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            request_11.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
 
-            //request_10.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
-            //request_10.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
-            //request_10.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
-            //request_10.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
-            //request_10.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
-            //request_10.AddParameter("_jc_save_showIns", "true", ParameterType.Cookie);
-            //request_10.AddParameter("application/x-www-form-urlencoded", "cancel_flag=2& bed_level_order_num=000000000000000000000000000000&passengerTicketStr=M,0,1,许灿杰,1,445281199508301071,13428108149,N&oldPassengerStr=许灿杰,1,445281199508301071,1_&tour_flag=dc&randCode=&whatsSelect=1", ParameterType.RequestBody);
-            //if (response_4.Cookies.Count > 0)
-            //{
-            //    foreach (var item in response_4.Cookies)
-            //    {
-            //        request_10.AddParameter(item.Name, item.Value, ParameterType.Cookie);
-            //    }
-            //}
-            //IRestResponse response_10 = client_10.Execute(request_10);
+            request_11.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
+            request_11.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
+            request_11.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
+            request_11.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
+            request_11.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
+            if (response_4.Cookies.Count > 0)
+            {
+                foreach (var item in response_4.Cookies)
+                {
+                    request_11.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+                }
+            }
+            request_11.AddParameter("RAIL_DEVICEID", callBackFunction.Dfp, ParameterType.Cookie);
+            request_11.AddParameter("RAIL_EXPIRATION", callBackFunction.Exp, ParameterType.Cookie);
+
+
+            request_11.AddParameter("application/x-www-form-urlencoded; charset=UTF-8", "cancel_flag=2&bed_level_order_num=000000000000000000000000000000&passengerTicketStr=O%2C0%2C1%2C%E8%AE%B8%E7%81%BF%E6%9D%B0%2C1%2C445281199508301071%2C13428108149%2CN&oldPassengerStr=%E8%AE%B8%E7%81%BF%E6%9D%B0%2C1%2C445281199508301071%2C1_&tour_flag=dc&randCode=&whatsSelect=1", ParameterType.RequestBody);
+            
+            IRestResponse response_11 = client_11.Execute(request_11);
+
+
+
             #endregion
 
             #region getQueueCount
@@ -357,7 +419,7 @@ namespace MyMVCDemo.Controllers
                 var matchId = item.MatchID;
 
                 var traderId = item.TraderID;
-                
+
                 createUserData = HttpHelper.SendPostRequest("http://120.77.254.201:8085/Handlers/Default/User/UserManageHandler.ashx/?method=CreateUser", "matchID=" + item.MatchID + "&traderID=" + item.TraderID, cookie, HttpHelper.header);
 
                 //  证券资产详情
@@ -393,7 +455,7 @@ namespace MyMVCDemo.Controllers
             ViewBag.matchInfoOutputList = matchInfoOutputs;
             return View();
         }
-        
+
         public JsonResult DataApi()
         {
             return Json(new {
@@ -418,7 +480,7 @@ namespace MyMVCDemo.Controllers
 
     public class VEMatchModel
     {
-        public int MatchID{ get;  set; }
+        public int MatchID { get; set; }
         public string MatchName { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
@@ -488,7 +550,7 @@ namespace MyMVCDemo.Controllers
             {
                 return string.Empty;
             }
-            char[] Base64Code = new char[]{'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','0','1','2','3','4','5','6','7','8','9','+','/','='};
+            char[] Base64Code = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/', '=' };
             byte empty = (byte)0;
             System.Collections.ArrayList byteMessage = new System.Collections.ArrayList(System.Text.Encoding.Default.GetBytes(str));
             System.Text.StringBuilder outmessage;
@@ -639,7 +701,7 @@ namespace MyMVCDemo.Controllers
             request.AddHeader("Host", "kyfw.12306.cn");
             request.AddHeader("Referer", "https://kyfw.12306.cn/otn/resources/login.html");
             request.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
-            if (cookiesContainer!= null && cookiesContainer.Count > 0)
+            if (cookiesContainer != null && cookiesContainer.Count > 0)
             {
                 foreach (var cookieItem in cookiesContainer)
                 {
@@ -668,7 +730,7 @@ namespace MyMVCDemo.Controllers
                     request.AddParameter(cookieItem.Name, cookieItem.Value, ParameterType.Cookie);
                 }
             }
-            
+
             request.AddParameter("undefined", data, ParameterType.RequestBody);
 
             return client.Execute(request);
@@ -712,48 +774,385 @@ namespace MyMVCDemo.Controllers
         /// 车票密文
         /// </summary>
         public string SecretStr { get; set; }
+
         /// <summary>
         /// 按钮提示文字
         /// </summary>
         public string ButtonTextInfo { get; set; }
+
+        /// <summary>
+        /// 列车编号
+        /// </summary>
         public string Train_no { get; set; }
+
+        /// <summary>
+        /// 车次
+        /// </summary>
         public string Station_train_code { get; set; }
+
+        /// <summary>
+        /// 始发站编码
+        /// </summary>
         public string Start_station_telecode { get; set; }
+
+        /// <summary>
+        /// 终点站编码
+        /// </summary>
         public string End_station_telecode { get; set; }
+
+        /// <summary>
+        /// 出发站编码
+        /// </summary>
         public string From_station_telecode { get; set; }
+
+        /// <summary>
+        /// 到达站编码
+        /// </summary>
         public string To_station_telecode { get; set; }
+
+        /// <summary>
+        /// 出发时间
+        /// </summary>
         public string Start_time { get; set; }
+
+        /// <summary>
+        /// 到达时间
+        /// </summary>
         public string Arrive_time { get; set; }
+
+        /// <summary>
+        /// 历时
+        /// </summary>
         public string Lishi { get; set; }
+
+        /// <summary>
+        /// 是否可以网上购票   "Y" -> true
+        /// </summary> 
         public string CanWebBuy { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Yp_info { get; set; }
+
+        /// <summary>
+        /// 出发日期
+        /// </summary>
         public string Start_train_data { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Train_seat_feature { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Location_code { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string From_station_no { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string To_station_no { get; set; }
+
+        /// <summary>
+        /// 是否支持二代身份证进出站    !=0 -> true
+        /// </summary>
         public string Is_support_card { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Controlled_train_flag { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Gg_num { get; set; }
+
+        /// <summary>
+        /// 高级软卧
+        /// </summary>
         public string Gr_num { get; set; }
+
+        /// <summary>
+        /// 其他
+        /// </summary>
         public string Qt_num { get; set; }
+
+        /// <summary>
+        /// 软卧一等座
+        /// </summary>
         public string Rw_num { get; set; }
+
+        /// <summary>
+        /// 软座
+        /// </summary>
         public string Rz_num { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Tz_num { get; set; }
+
+        /// <summary>
+        /// 无座数量
+        /// </summary>
         public string Wz_num { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Yb_num { get; set; }
+
+        /// <summary>
+        /// 硬卧二等卧
+        /// </summary>
         public string Yw_num { get; set; }
+
+        /// <summary>
+        /// 硬座
+        /// </summary>
         public string Yz_num { get; set; }
+
+        /// <summary>
+        /// 二等座数量
+        /// </summary>
         public string Ze_num { get; set; }
+
+        /// <summary>
+        /// 一等座数量
+        /// </summary>
         public string Zy_num { get; set; }
+
+        /// <summary>
+        /// 商务座数量
+        /// </summary>
         public string Swz_num { get; set; }
+
+        /// <summary>
+        /// 动卧
+        /// </summary>
         public string Srrb_num { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Yp_ex { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Seat_types { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Exchange_train_flag { get; set; }
+
+        /// <summary>
+        /// 候补
+        /// </summary>
         public string Houbu_train_flag { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Houbu_seat_limit { get; set; }
+
+        /// <summary>
+        /// 出发站名称
+        /// </summary>
         public string From_station_name { get; set; }
+
+        /// <summary>
+        /// 到达站名称
+        /// </summary>
         public string To_station_name { get; set; }
+    }
+
+    public class PassengerDTOResponse
+    {
+        public string ValidateMessagesShowId { get; set; }
+
+        public bool Status { get; set; }
+
+        public int Httpstatus { get; set; }
+
+        public PassengerDTOResponseData Data { get; set; }
+
+        public List<string> Message { get; set; }
+
+        public Object ValidateMessage { get; set; }
+    }
+
+    public class PassengerDTOResponseData
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Notify_for_gat { get; set; }
+
+        /// <summary>
+        /// 是否存在
+        /// </summary>
+        public bool IsExist { get; set; }
+
+        /// <summary>
+        /// 异常信息
+        /// </summary>
+        public string ExMsg { get; set; }
+
+        public List<int> Two_isOpenClick { get; set; }
+
+        public List<int> Other_isOpenClick { get; set; }
+
+        /// <summary>
+        /// 常用乘客
+        /// </summary>
+        public List<PassengerDto> Normal_passengers { get; set; }
+
+        /// <summary>
+        /// 受让人
+        /// </summary>
+        public List<PassengerDto> Dj_passengers { get; set; }
+    }
+
+    public class PassengerDto
+    {
+        public int Code { get; set; }
+
+        /// <summary>
+        /// 乘客姓名
+        /// </summary>
+        public string Passenger_name { get; set; }
+
+        /// <summary>
+        /// 性别编码    M -> 男
+        /// </summary>
+        public string Sex_code { get; set; }
+
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public string Sex_name { get; set; }
+
+        /// <summary>
+        /// 出生日期
+        /// </summary>
+        public string Born_data { get; set; }
+
+        /// <summary>
+        /// 国家代码
+        /// </summary>
+        public string Country_code { get; set; }
+
+        /// <summary>
+        /// 乘客身份证类型编码
+        /// </summary>
+        public int Passenger_id_type_code { get; set; }
+
+        /// <summary>
+        /// 乘客身份证类型
+        /// </summary>
+        public string Passenger_id_type_name { get; set; }
+
+        /// <summary>
+        /// 身份证号码
+        /// </summary>
+        public string Passenger_id_no { get; set; }
+
+        /// <summary>
+        /// 乘客类型
+        /// </summary>
+        public int Passenger_type { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Passenger_flag { get; set; }
+
+        /// <summary>
+        /// 乘客类型名称  成人/学生
+        /// </summary>
+        public string Passenger_type_name { get; set; }
+
+        /// <summary>
+        /// 手机号码
+        /// </summary>
+        public string Mobile_no { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Phone_no { get; set; }
+
+        /// <summary>
+        /// 邮箱
+        /// </summary>
+        public string Email { get; set; }
+
+        /// <summary>
+        /// 地址
+        /// </summary>
+        public string Address { get; set; }
+
+        /// <summary>
+        /// 邮政编码
+        /// </summary>
+        public string PostalCode { get; set; }
+
+        /// <summary>
+        /// 姓名首字母
+        /// </summary>
+        public string First_letter { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int RecordCount { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Total_times { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Index_id { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Gat_born_date { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Gat_valid_date_start { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Gat_valid_date_end { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Gat_version { get; set; }
+
+    }
+
+    public class CallBackFunction
+    {
+        public string Exp { get; set; }
+
+        public string Dfp { get; set; }
     }
 }

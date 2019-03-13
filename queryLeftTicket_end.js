@@ -2058,9 +2058,15 @@ var isInitLoad = true;
 		return ""
 	}
 	/*
-		cs(cQ, cL[cM].queryLeftNewDTO.zy_num, "ZY_",
-			cL[cM].queryLeftNewDTO.train_no, cL[cM].queryLeftNewDTO.yp_ex, "M1", 
-			cL[cM].queryLeftNewDTO.controlled_train_flag, cL[cM]);
+		cQ	填充HTML
+		cs( cQ, 
+			cL[cM].queryLeftNewDTO.zy_num,
+		    "ZY_",
+		    cL[cM].queryLeftNewDTO.train_no, 
+			cL[cM].queryLeftNewDTO.yp_ex,
+			"M1", 
+			cL[cM].queryLeftNewDTO.controlled_train_flag,
+			cL[cM]);
 	*/
 	function cs(cU, c8, c4, cZ, c5, cW, cS, cV) {
 		var cN = cV.queryLeftNewDTO;
@@ -2221,6 +2227,7 @@ var isInitLoad = true;
 			}
 		}
 	}
+	
 	function l(cM, cL) {
 		ishaveCheckId = false;
 		for (i = 0; i < cM.length; i++) {
@@ -6242,6 +6249,10 @@ var isInitLoad = true;
 			aV()
 		})
 	}
+	/*
+		cM secreetStr
+		cL start_time
+	*/
 	submitOrderRequest = function (cM, cL) {
 		$.ajax({
 			type: "post",
@@ -6260,7 +6271,7 @@ var isInitLoad = true;
 					} else {
 						cQ = $("#train_date").val()
 					}
-					if (B == "0X00") {
+					if (B == "0X00") {//	学生票
 						var cP = false;
 						for (i = (studentComPerArr.length - 1); i >= 0; i = i - 2) {
 							if (G(studentComPerArr[i - 1]) <= G(cQ) && G(studentComPerArr[i]) >= G(cQ)) {
@@ -6284,7 +6295,8 @@ var isInitLoad = true;
 								aa(cM, cL)
 							}
 						})
-					} else {
+					}
+					else {
 						aa(cM, cL)
 					}
 				} else {
@@ -6306,10 +6318,14 @@ var isInitLoad = true;
 			}
 		})
 	};
+	/*
+		cY	secretStr
+		cR	startTime
+	*/
 	function aa(cY, cR) {
 		var cL = "";
 		if ($("#dc").is(":checked")) {
-			cL = "dc"
+			cL = "dc"	//	单程
 		} else {
 			cL = "wc"
 		}
@@ -6330,7 +6346,9 @@ var isInitLoad = true;
 			cL = "gc"
 		}
 		if ("undefined" == typeof(submitForm)) {
-			var cP = "secretStr=" + cY + "&train_date=" + $("#train_date").val() + "&back_train_date=" + $("#back_train_date").val() + "&tour_flag=" + cL + "&purpose_codes=" + cF() + "&query_from_station_name=" + $("#fromStationText").val() + "&query_to_station_name=" + $("#toStationText").val() + "&" + cW
+			var cP = "secretStr=" + cY + "&train_date=" + $("#train_date").val() + "&back_train_date=" + $("#back_train_date").val() 
+				+ "&tour_flag=" + cL + "&purpose_codes=" + cF() + "&query_from_station_name=" + $("#fromStationText").val() 
+				+ "&query_to_station_name=" + $("#toStationText").val() + "&" + cW
 		} else {
 			var cM = submitForm();
 			var cX = cM.split(":::");
@@ -6359,6 +6377,10 @@ var isInitLoad = true;
 							}
 						})
 					} else {
+						/*
+							cL: 'dc' 单程
+							train_tour_flag : 'other'
+						*/
 						bd(cL, train_tour_flag)
 					}
 				}
@@ -8461,6 +8483,32 @@ var isInitLoad = true;
 		return cL + cM + cN
 	}
 })();
+/*
+	cQ.push(' <td align="center" width="80" class="no-br"><a href="javascript:" class="btn72" onclick="checkG1234(\'');
+				cQ.push(cL[cM].secretStr);
+				cQ.push("','");
+				cQ.push(cL[cM].queryLeftNewDTO.start_time);
+				cQ.push("','");
+				cQ.push(cL[cM].queryLeftNewDTO.train_no);
+				cQ.push("','");
+				cQ.push(cL[cM].queryLeftNewDTO.from_station_telecode);
+				cQ.push("','");
+				cQ.push(cL[cM].queryLeftNewDTO.to_station_telecode);
+				cQ.push("')\">");
+				cQ.push(buttonText());
+				if (cL[cM].queryLeftNewDTO.exchange_train_flag == 1) {
+					cQ.push("<i class='ico-dh'></i>")
+				}
+				cQ.push("</a>");
+				cQ.push("</td>")
+*/
+/*
+	g secreetStr
+	f start_time
+	c train_no
+	h from_station_telecode
+	b to_station_telecode
+*/
 function checkG1234(g, f, c, h, b) {
 	var a = "99999GGGGG";
 	var e = "##CCT##PPT##CPT##PXT##SBT##PBD##JOD##HPD##SHD##QTP##TSP##TJP##";
@@ -8481,6 +8529,7 @@ function checkG1234(g, f, c, h, b) {
 		submitOrderRequest(g, f)
 	}
 }
+
 function checkRandCodeUAM(e) {
 	var b = false,
 	a = e.value,

@@ -120,7 +120,7 @@ form data
 	seatDetailType	000
 	whatsSelect	1
 	roomType	00
-	dwAll	N
+	dwAll	N	//	固定值
 	_json_att	
 	REPEAT_SUBMIT_TOKEN	0501bbd733d519cf7836efa1659b0731
 	

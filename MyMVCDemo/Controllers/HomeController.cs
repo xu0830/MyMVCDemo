@@ -163,10 +163,9 @@ namespace MyMVCDemo.Controllers
             #endregion
 
             #region queryX
-            var client_8 = new RestClient("https://kyfw.12306.cn/otn/leftTicket/queryX?leftTicketDTO.train_date=2019-04-08&leftTicketDTO.from_station=IOQ&leftTicketDTO.to_station=PEQ&purpose_codes=ADULT");
+            var client_8 = new RestClient("https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=2019-04-08&leftTicketDTO.from_station=IOQ&leftTicketDTO.to_station=PEQ&purpose_codes=ADULT");
             var request_8 = new RestRequest(Method.GET);
             request_8.AddHeader("cache-control", "no-cache");
-            request_8.AddHeader("Content-Type", "application/x-www-form-urlencoded");
             IRestResponse response_8 = client_8.Execute(request_8);
 
             TicketsResponse ticketsResponse = JsonConvert.DeserializeObject<TicketsResponse>(response_8.Content);
@@ -336,7 +335,7 @@ namespace MyMVCDemo.Controllers
             #region checkOrderInfo
             var client_12 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo");
             var request_12 = new RestRequest(Method.POST);
-            request_12.AddHeader("Cache-Control", ": no-cache");
+            request_12.AddHeader("Cache-Control", "no-cache");
             request_12.AddHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
             request_12.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0");
             request_12.AddHeader("Connection", "true");
@@ -354,7 +353,11 @@ namespace MyMVCDemo.Controllers
                 }
             }
 
-            request_12.AddParameter("application/x-www-form-urlencoded; charset=UTF-8", "cancel_flag=2&bed_level_order_num=000000000000000000000000000000&passengerTicketStr=O,0,1,许灿杰,1,445281199508301071,13428108149,N&oldPassengerStr=许灿杰,1,445281199508301071,1_&tour_flag=dc&randCode=&whatsSelect=1", ParameterType.RequestBody);
+            request_12.AddParameter("application/x-www-form-urlencoded; charset=UTF-8", 
+                "cancel_flag=2&bed_level_order_num=000000000000000000000000000000" +
+                "&passengerTicketStr=O,0,1,许灿杰,1,445281199508301071,13428108149,N" +
+                "&oldPassengerStr=许灿杰,1,445281199508301071,1_" +
+                "&tour_flag=dc&randCode=&whatsSelect=1", ParameterType.RequestBody);
 
             IRestResponse response_12 = client_12.Execute(request_12);
 
@@ -384,18 +387,63 @@ namespace MyMVCDemo.Controllers
             request_13.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
             request_13.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
 
-            var request_13_form_data = "train_date=Mon Apr 08 2019 00:00:00 GMT+0800 (中国标准时间)&train_no=" + orderQuestDTO.Train_no + "&stationTrainCode=" + orderQuestDTO.Station_train_code + "&seatType=O&fromStationTelecode=" + orderQuestDTO.From_station_telecode + "&toStationTelecode=" + orderQuestDTO.To_station_telecode + "&leftTicket=" + ticketInfoForPassengerForm.QueryLeftTicketRequestDTO.YpInfoDetail + "&purpose_codes=00&train_location=" + ticketInfoForPassengerForm.Train_location + "&isCheckOrderInfo=";
+            var request_13_form_data = "train_date=Mon Apr 08 2019 00:00:00 GMT+0800 (中国标准时间)&train_no=" 
+                + orderQuestDTO.Train_no + "&stationTrainCode=" + orderQuestDTO.Station_train_code
+                + "&seatType=O&fromStationTelecode=" + orderQuestDTO.From_station_telecode
+                + "&toStationTelecode=" + orderQuestDTO.To_station_telecode + "&leftTicket=" 
+                + ticketInfoForPassengerForm.QueryLeftTicketRequestDTO.YpInfoDetail
+                + "&purpose_codes=00&train_location=" + ticketInfoForPassengerForm.Train_location 
+                + "&isCheckOrderInfo=";
 
-            request_13.AddParameter("application/x-www-form-urlencoded; charset=UTF-8", "train_date=Mon+Apr+08+2019+00%3A00%3A00+GMT%2B0800+(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4)&train_no=6i000D235005&stationTrainCode=D2350&seatType=O&fromStationTelecode=IOQ&toStationTelecode=KTQ&leftTicket=dyR9OtjFe4sh8%252F%252F38K2%252BwkIhMnjE5hxN&purpose_codes=00&train_location=Q7", ParameterType.RequestBody);
+            request_13.AddParameter("application/x-www-form-urlencoded; charset=UTF-8",
+                "train_date=Mon+Apr+08+2019+00%3A00%3A00+GMT%2B0800+(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4)" +
+                "&train_no="+ orderQuestDTO.Train_no + "&stationTrainCode="+ orderQuestDTO.Station_train_code +"&seatType=O" +
+                "&fromStationTelecode="+ orderQuestDTO.From_station_telecode
+                +"&toStationTelecode=" + orderQuestDTO.To_station_telecode + 
+                "&leftTicket=" + ticketInfoForPassengerForm.QueryLeftTicketRequestDTO.YpInfoDetail +
+                "&purpose_codes=00&train_location=" + ticketInfoForPassengerForm.Train_location, ParameterType.RequestBody);
 
            
             IRestResponse response_13 = client_13.Execute(request_13);
 
-            QueueCountResponseData queueCountResponseData = JsonConvert.DeserializeObject<QueueCountResponseData>(response_13.Content);
-
+            QueueCountResponseModel queueCountResponseData = JsonConvert.DeserializeObject<QueueCountResponseModel>
+                (response_13.Content);
 
             #endregion
 
+            #region confirmSingleForQueue
+            var client_14 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue");
+            var request_14 = new RestRequest(Method.POST);
+            request_14.AddHeader("Cache-Control", "no-cache");
+            request_14.AddHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+            request_14.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0");
+
+            if (response_4.Cookies.Count > 0)
+            {
+                foreach (var item in response_4.Cookies)
+                {
+                    request_14.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+                }
+            }
+            request_14.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
+            request_14.AddParameter("_jc_save_fromStation", "%u6DF1%u51433%u53114%2CIOQ", ParameterType.Cookie);
+            request_14.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
+            request_14.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
+            request_14.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
+
+            request_14.AddParameter("application/x-www-form-urlencoded; charset=UTF-8",
+                "passengerTicketStr=O,0,1,许灿杰,1,445281199508301071,13428108149,N" +
+                "&oldPassengerStr=许灿杰,1,445281199508301071,1_&randCode=&purpose_codes=00" +
+                "&key_check_isChange=" + ticketInfoForPassengerForm.Key_check_isChange +
+                "&leftTicketStr=" + ticketInfoForPassengerForm.LeftTicketStr +
+                "&train_location=" + ticketInfoForPassengerForm.Train_location +
+                "&choose_seats=&seatDetailType=000&whatsSelect=1&roomType=00&dwAll=N", ParameterType.RequestBody);
+
+
+            IRestResponse response_14 = client_14.Execute(request_14);
+
+
+            #endregion
 
 
             return Json(new

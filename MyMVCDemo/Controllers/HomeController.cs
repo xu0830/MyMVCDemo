@@ -255,60 +255,9 @@ namespace MyMVCDemo.Controllers
 
             #endregion
 
-    
-            #region logdevice
-            var client_12 = new RestClient("https://kyfw.12306.cn/otn/HttpZF/logdevice");
-            var request_12 = new RestRequest(Method.GET);
-            IRestResponse response_12 = client_12.Execute(request_12);
-            StringBuilder builder = new StringBuilder();
-            String content = builder.Append(response_12.Content.Substring(response_12.Content.IndexOf("'") + 1, response_12.Content.LastIndexOf("'") - response_12.Content.IndexOf("'") - 1)).ToString();
-
-            CallBackFunction callBackFunction = JsonConvert.DeserializeObject<CallBackFunction>(content);
-            #endregion
-
-            #region https://kyfw.12306.cn/otn/confirmPassenger/initWc
-            var client_13 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/initWc");
-            var request_13 = new RestRequest(Method.POST);
-            request_13.AddHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*; q=0.8");
-            request_13.AddHeader("Accept-Encoding", "gzip, deflate, br");
-            request_13.AddHeader("Accept-Language", "zh-CN,zh;q=0.9");
-            request_13.AddHeader("Cache-Control", "max-age=0");
-            request_13.AddHeader("Connection", "keep-alive");
-            request_13.AddHeader("Content-Length", "10");
-            request_13.AddHeader("Content-Type", "application/x-www-form-urlencoded");
-
-            request_13.AddHeader("Host", "kyfw.12306.cn");
-            request_13.AddHeader("Origin", "https://kyfw.12306.cn");
-            request_13.AddHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc");
-            request_13.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
-            request_13.AddHeader("Upgrade-Insecure-Requests", "1");
-
-            request_13.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
-            request_13.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
-            request_13.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
-            request_13.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
-            request_13.AddParameter("_jc_save_showIns", "true", ParameterType.Cookie);
-            request_13.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
-            if (response_4.Cookies.Count > 0)
-            {
-                foreach (var item in response_4.Cookies)
-                {
-                    request_13.AddParameter(item.Name, item.Value, ParameterType.Cookie);
-                }
-            }
-
-            IRestResponse response_13 = client_13.Execute(request_13);
-
-            var flag = response_13.Content.IndexOf("ticketInfoForPassengerForm");
-            #endregion
-
-            #region getPassengerDTOs 获取乘客信息
-            var client_10 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs");
+            #region https://kyfw.12306.cn/otn/confirmPassenger/initDc
+            var client_10 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/initDc");
             var request_10 = new RestRequest(Method.POST);
-            request_10.AddHeader("cache-control", "no-cache");
-            request_10.AddHeader("Host", "kyfw.12306.cn");
-            request_10.AddHeader("Origin", "https://kyfw.12306.cn");
-            request_10.AddHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
 
             request_10.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
             request_10.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
@@ -322,19 +271,48 @@ namespace MyMVCDemo.Controllers
                     request_10.AddParameter(item.Name, item.Value, ParameterType.Cookie);
                 }
             }
+            
             IRestResponse response_10 = client_10.Execute(request_10);
 
-            PassengerDTOResponse passengerDTOResponse = JsonConvert.DeserializeObject<PassengerDTOResponse>(response_10.Content);
+            int FormIndex = response_10.Content.IndexOf("ticketInfoForPassengerForm");
 
+            int FormLastIndex = response_10.Content.LastIndexOf("orderRequestDTO");
+
+            int limit_ticket_num_index = response_10.Content.LastIndexOf("init_limit_ticket_num");
+
+            int SubmitTokenIndex = response_10.Content.IndexOf("globalRepeatSubmitToken");
+
+            int global_lang_index = response_10.Content.IndexOf("global_lang");
+
+            string REPEAT_SUBMIT_TOKEN_Str_temp = response_10.Content.Substring(SubmitTokenIndex, global_lang_index-SubmitTokenIndex);
+
+            string REPEAT_SUBMIT_TOKEN_Str = REPEAT_SUBMIT_TOKEN_Str_temp.Substring(REPEAT_SUBMIT_TOKEN_Str_temp.IndexOf("'")+1, REPEAT_SUBMIT_TOKEN_Str_temp.LastIndexOf("'")- REPEAT_SUBMIT_TOKEN_Str_temp.IndexOf("'"));
+
+            StringBuilder passengerForm = new StringBuilder();
+
+            passengerForm.Append(response_10.Content.Substring(FormIndex, FormLastIndex-FormIndex));
+
+            string passengerFormStr = passengerForm.ToString();
+
+            TicketInfoForPassengerForm ticketInfoForPassengerForm = JsonConvert.DeserializeObject<TicketInfoForPassengerForm>
+                (passengerFormStr.Substring(passengerFormStr.IndexOf("=") + 1,
+                passengerFormStr.LastIndexOf("}") - passengerFormStr.IndexOf("=")));
+
+            string OrderRequestDTOStr = response_10.Content.Substring(FormLastIndex, limit_ticket_num_index-FormLastIndex);
+
+            OrderQuestDTO orderQuestDTO = JsonConvert.DeserializeObject<OrderQuestDTO>(
+                OrderRequestDTOStr.Substring(OrderRequestDTOStr.IndexOf("=") + 1,
+                    OrderRequestDTOStr.LastIndexOf("}") - OrderRequestDTOStr.IndexOf("=")));
             #endregion
 
-
-            #region checkOrderInfo
-
-            var client_11 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo");
+            #region getPassengerDTOs 获取乘客信息
+            var client_11 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs");
             var request_11 = new RestRequest(Method.POST);
-            request_11.AddHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-            request_11.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
+            request_11.AddHeader("cache-control", "no-cache");
+            request_11.AddHeader("Host", "kyfw.12306.cn");
+            request_11.AddHeader("Origin", "https://kyfw.12306.cn");
+            request_11.AddHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
+            request_11.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0");
 
             request_11.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
             request_11.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
@@ -348,39 +326,77 @@ namespace MyMVCDemo.Controllers
                     request_11.AddParameter(item.Name, item.Value, ParameterType.Cookie);
                 }
             }
-            request_11.AddParameter("RAIL_DEVICEID", callBackFunction.Dfp, ParameterType.Cookie);
-            request_11.AddParameter("RAIL_EXPIRATION", callBackFunction.Exp, ParameterType.Cookie);
-
-
-            request_11.AddParameter("application/x-www-form-urlencoded; charset=UTF-8", "cancel_flag=2&bed_level_order_num=000000000000000000000000000000&passengerTicketStr=O%2C0%2C1%2C%E8%AE%B8%E7%81%BF%E6%9D%B0%2C1%2C445281199508301071%2C13428108149%2CN&oldPassengerStr=%E8%AE%B8%E7%81%BF%E6%9D%B0%2C1%2C445281199508301071%2C1_&tour_flag=dc&randCode=&whatsSelect=1", ParameterType.RequestBody);
-            
             IRestResponse response_11 = client_11.Execute(request_11);
+
+            PassengerDTOResponse passengerDTOResponse = JsonConvert.DeserializeObject<PassengerDTOResponse>(response_11.Content);
+
+            #endregion
+
+
+            #region checkOrderInfo
+            var client_12 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo");
+            var request_12 = new RestRequest(Method.POST);
+            request_12.AddHeader("Cache-Control", ": no-cache");
+            request_12.AddHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            request_12.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0");
+            request_12.AddHeader("Connection", "true");
+
+            request_12.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
+            request_12.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
+            request_12.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
+            request_12.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
+            request_12.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
+            if (response_4.Cookies.Count > 0)
+            {
+                foreach (var item in response_4.Cookies)
+                {
+                    request_12.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+                }
+            }
+
+            request_12.AddParameter("application/x-www-form-urlencoded; charset=UTF-8", "cancel_flag=2&bed_level_order_num=000000000000000000000000000000&passengerTicketStr=O,0,1,许灿杰,1,445281199508301071,13428108149,N&oldPassengerStr=许灿杰,1,445281199508301071,1_&tour_flag=dc&randCode=&whatsSelect=1", ParameterType.RequestBody);
+
+            IRestResponse response_12 = client_12.Execute(request_12);
 
 
 
             #endregion
 
             #region getQueueCount
-            //var client_7 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount");
-            //var request_7 = new RestRequest(Method.POST);
-            //request_7.AddHeader("cache-control", "no-cache");
+            var client_13 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount");
+            var request_13 = new RestRequest(Method.POST);
+            request_13.AddHeader("Cache-Control", "no-cache");
+            request_13.AddHeader("Accept", "application/json");
+            request_13.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            request_13.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0");
+            request_13.AddHeader("Connection", "true");
 
-            //if (response_4.Cookies.Count > 0)
-            //{
-            //    foreach (var item in response_4.Cookies)
-            //    {
-            //        request_7.AddParameter(item.Name, item.Value, ParameterType.Cookie);
-            //    }
-            //}
-            //request_7.AddParameter("_jc_save_fromDate", "2019-04-09", ParameterType.Cookie);
-            //request_7.AddParameter("_jc_save_fromStation", "%u6DF1%u5733%u5317%2CIOQ", ParameterType.Cookie);
-            //request_7.AddParameter("_jc_save_toDate", "2019-04-09", ParameterType.Cookie);
-            //request_7.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
-            //request_7.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
+            if (response_4.Cookies.Count > 0)
+            {
+                foreach (var item in response_4.Cookies)
+                {
+                    request_13.AddParameter(item.Name, item.Value, ParameterType.Cookie);
+                }
+            }
+            request_13.AddParameter("_jc_save_fromDate", "2019-04-08", ParameterType.Cookie);
+            request_13.AddParameter("_jc_save_fromStation", "%u6DF1%u51333%u53113%2CIOQ", ParameterType.Cookie);
+            request_13.AddParameter("_jc_save_toDate", "2019-04-08", ParameterType.Cookie);
+            request_13.AddParameter("_jc_save_toStation", "%u666E%u5B81%2CPEQ", ParameterType.Cookie);
+            request_13.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
 
-            //request_7.AddParameter("application/x-www-form-urlencoded", "train_date=Sat Apr 06 2019 00:00:00 GMT+0800 (中国标准时间)&train_no=6i000D31080C&stationTrainCode=D3108&seatType=0&fromStationTelecode=IOQ&toStationTelecode=KTQ&leftTicket=Yv936dbd%2Fw4wX06DFNrktl2ZOT1Sflb%2Bxa888uF1ojMSJ0Yn&purpose_codes=00&train_location=QY", ParameterType.RequestBody);
-            //IRestResponse response_7 = client_7.Execute(request_7);
+            var request_13_form_data = "train_date=Mon Apr 08 2019 00:00:00 GMT+0800 (中国标准时间)&train_no=" + orderQuestDTO.Train_no + "&stationTrainCode=" + orderQuestDTO.Station_train_code + "&seatType=O&fromStationTelecode=" + orderQuestDTO.From_station_telecode + "&toStationTelecode=" + orderQuestDTO.To_station_telecode + "&leftTicket=" + ticketInfoForPassengerForm.QueryLeftTicketRequestDTO.YpInfoDetail + "&purpose_codes=00&train_location=" + ticketInfoForPassengerForm.Train_location + "&isCheckOrderInfo=";
+
+            request_13.AddParameter("application/x-www-form-urlencoded; charset=UTF-8", "train_date=Mon+Apr+08+2019+00%3A00%3A00+GMT%2B0800+(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4)&train_no=6i000D235005&stationTrainCode=D2350&seatType=O&fromStationTelecode=IOQ&toStationTelecode=KTQ&leftTicket=dyR9OtjFe4sh8%252F%252F38K2%252BwkIhMnjE5hxN&purpose_codes=00&train_location=Q7", ParameterType.RequestBody);
+
+           
+            IRestResponse response_13 = client_13.Execute(request_13);
+
+            QueueCountResponseData queueCountResponseData = JsonConvert.DeserializeObject<QueueCountResponseData>(response_13.Content);
+
+
             #endregion
+
+
 
             return Json(new
             {
@@ -397,62 +413,6 @@ namespace MyMVCDemo.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-
-            //  登录状态
-            CookieContainer cookie = HttpHelper.GetCookie("http://120.77.254.201:8085/Handlers/Default/Common/IdentityHandler.ashx/?method=Login", "name=2017011700&isSave=false&pwd=" + JhEncrypt.EncryptString("123qwe"), HttpHelper.header);
-
-            //  获取参加中的大赛
-            string data = HttpHelper.SendPostRequest("http://120.77.254.201:8085/Handlers/Default/Match/MatchQueryHandler.ashx/?method=GetMatchesGoingIn", "", cookie, HttpHelper.header);
-            VEJsonModel<VEMatchModel> matchJsonModel = JsonConvert.DeserializeObject<VEJsonModel<VEMatchModel>>(data);
-
-
-            List<VEMatchModel> VEMatches = matchJsonModel.rows;
-
-            string createUserData = "";
-            string AccountMoneyAsset = "";
-            string BankAccountInfo = "";
-            string spotFundsData = "";
-            List<MatchInfoOutput> matchInfoOutputs = new List<MatchInfoOutput>();
-            foreach (var item in VEMatches)
-            {
-                var matchId = item.MatchID;
-
-                var traderId = item.TraderID;
-
-                createUserData = HttpHelper.SendPostRequest("http://120.77.254.201:8085/Handlers/Default/User/UserManageHandler.ashx/?method=CreateUser", "matchID=" + item.MatchID + "&traderID=" + item.TraderID, cookie, HttpHelper.header);
-
-                //  证券资产详情
-                AccountMoneyAsset = HttpHelper.SendPostRequest("http://120.77.254.201:8085/Handlers/Default/AssetsQueryHandler.ashx/?method=GetAccountsSummaryConditional", "TraderID=" + traderId + "&MatchID=" + matchId, cookie, HttpHelper.header);
-
-                spotFundsData = HttpHelper.SendPostRequest("http://120.77.254.201:8085/Handlers/Default/BankFinanceHandler.ashx/?method=GetSpotFundsConditional", "TraderID=" + traderId, new CookieContainer(), HttpHelper.header);
-
-                //  银行账户详情
-                BankAccountInfo = HttpHelper.SendPostRequest("http://120.77.254.201:8085/Handlers/Default/BankFinanceHandler.ashx/?method=GetBankFundsWithInitFundsConditional", "TraderID=" + traderId, new CookieContainer(), HttpHelper.header);
-
-                VEJsonModel<SpotFundModel> spotFundModel = new VEJsonModel<SpotFundModel>();
-                spotFundModel = JsonConvert.DeserializeObject<VEJsonModel<SpotFundModel>>(spotFundsData);
-
-                VEJsonModel<AccountAssetModel> accountAssetModel = new VEJsonModel<AccountAssetModel>();
-                accountAssetModel = JsonConvert.DeserializeObject<VEJsonModel<AccountAssetModel>>(AccountMoneyAsset);
-
-                VEJsonModel<BankAccountModel> bankAccountModel = new VEJsonModel<BankAccountModel>();
-                bankAccountModel = JsonConvert.DeserializeObject<VEJsonModel<BankAccountModel>>(BankAccountInfo);
-
-                matchInfoOutputs.Add(new MatchInfoOutput
-                {
-                    MatchName = item.MatchName,
-                    TotalAsset = accountAssetModel.rows[0].TotalAssets,
-                    HoldMarketValue = accountAssetModel.rows[0].HoldMarketValue,
-                    totalProfitAndLoss = accountAssetModel.rows[0].TotalProfitAndLoss,
-                    FreeFund = spotFundModel.rows[0].FreeFund,
-                    CurrentValue = bankAccountModel.rows[0].CurrentValue
-                });
-            }
-
-            ViewBag.msg = AccountMoneyAsset;
-
-            ViewBag.matchInfoOutputList = matchInfoOutputs;
             return View();
         }
 
@@ -472,28 +432,6 @@ namespace MyMVCDemo.Controllers
         public string Newapptk { get; set; }
     }
 
-    public class VEJsonModel<T>
-    {
-        public int total { get; set; }
-        public List<T> rows { get; set; }
-    }
-
-    public class VEMatchModel
-    {
-        public int MatchID { get; set; }
-        public string MatchName { get; set; }
-        public string StartDate { get; set; }
-        public string EndDate { get; set; }
-        public int TraderID { get; set; }
-        public int TraderCount { get; set; }
-        public int CurrentState { get; set; }
-        public bool IsForex { get; set; }
-        public string MatchType { get; set; }
-        public string QuoteCenterName { get; set; }
-        public string Command { get; set; }
-        public string IsLogin { get; set; }
-    }
-
     public class AccountAssetModel
     {
         public int AccountTypeID { get; set; }
@@ -510,184 +448,7 @@ namespace MyMVCDemo.Controllers
         public decimal TradeFee { get; set; }
         public decimal TotalProfitAndLoss { get; set; }
     }
-
-    public class MatchInfoOutput
-    {
-        public string MatchName { get; set; }
-        public decimal TotalAsset { get; set; }
-        public decimal HoldMarketValue { get; set; }
-        public decimal totalProfitAndLoss { get; set; }
-        public decimal FreeFund { get; set; }
-        public decimal CurrentValue { get; set; }
-    }
-
-    public class SpotFundModel
-    {
-        public string AccountName { get; set; }
-        public string Currency { get; set; }
-        public decimal FreeFund { get; set; }
-        public decimal LockFund { get; set; }
-    }
-
-    public class BankAccountModel
-    {
-        public int Currency { get; set; }
-        public decimal InitValue { get; set; }
-        public decimal CurrentValue { get; set; }
-    }
-
-    public class JhEncrypt
-    {
-        /**************************************************字符串加密算法**************************************************/
-        /// <summary>
-        /// 字符串加密算法
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static string EncryptString(string str)
-        {
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
-            char[] Base64Code = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/', '=' };
-            byte empty = (byte)0;
-            System.Collections.ArrayList byteMessage = new System.Collections.ArrayList(System.Text.Encoding.Default.GetBytes(str));
-            System.Text.StringBuilder outmessage;
-            int messageLen = byteMessage.Count;
-            int page = messageLen / 3;
-            int use = 0;
-            if ((use = messageLen % 3) > 0)
-            {
-                for (int i = 0; i < 3 - use; i++)
-                    byteMessage.Add(empty);
-                page++;
-            }
-            outmessage = new System.Text.StringBuilder(page * 4);
-            for (int i = 0; i < page; i++)
-            {
-                byte[] instr = new byte[3];
-                instr[0] = (byte)byteMessage[i * 3];
-                instr[1] = (byte)byteMessage[i * 3 + 1];
-                instr[2] = (byte)byteMessage[i * 3 + 2];
-                int[] outstr = new int[4];
-                outstr[0] = instr[0] >> 2;
-
-                outstr[1] = ((instr[0] & 0x03) << 4) ^ (instr[1] >> 4);
-                if (!instr[1].Equals(empty))
-                    outstr[2] = ((instr[1] & 0x0f) << 2) ^ (instr[2] >> 6);
-                else
-                    outstr[2] = 64;
-                if (!instr[2].Equals(empty))
-                    outstr[3] = (instr[2] & 0x3f);
-                else
-                    outstr[3] = 64;
-                outmessage.Append(Base64Code[outstr[0]]);
-                outmessage.Append(Base64Code[outstr[1]]);
-                outmessage.Append(Base64Code[outstr[2]]);
-                outmessage.Append(Base64Code[outstr[3]]);
-            }
-            return outmessage.ToString();
-        }
-        /**************************************************字符串解密算法**************************************************/
-        /// <summary>
-        /// 字符串解密算法
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
-        public static string DecryptString(string str)
-        {
-            if (string.IsNullOrEmpty(str))
-            {
-                return string.Empty;
-            }
-            if ((str.Length % 4) != 0)
-            {
-                throw new ArgumentException("不是正确的BASE64编码，请检查。", "str");
-            }
-            if (!System.Text.RegularExpressions.Regex.IsMatch(str, "^[A-Z0-9/+=]*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase))
-            {
-                throw new ArgumentException("包含不正确的BASE64编码，请检查。", "str");
-            }
-            string Base64Code = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=";
-            int page = str.Length / 4;
-            System.Collections.ArrayList outMessage = new System.Collections.ArrayList(page * 3);
-            char[] message = str.ToCharArray();
-            for (int i = 0; i < page; i++)
-            {
-                byte[] instr = new byte[4];
-                instr[0] = (byte)Base64Code.IndexOf(message[i * 4]);
-                instr[1] = (byte)Base64Code.IndexOf(message[i * 4 + 1]);
-                instr[2] = (byte)Base64Code.IndexOf(message[i * 4 + 2]);
-                instr[3] = (byte)Base64Code.IndexOf(message[i * 4 + 3]);
-                byte[] outstr = new byte[3];
-                outstr[0] = (byte)((instr[0] << 2) ^ ((instr[1] & 0x30) >> 4));
-                if (instr[2] != 64)
-                {
-                    outstr[1] = (byte)((instr[1] << 4) ^ ((instr[2] & 0x3c) >> 2));
-                }
-                else
-                {
-                    outstr[2] = 0;
-                }
-                if (instr[3] != 64)
-                {
-                    outstr[2] = (byte)((instr[2] << 6) ^ instr[3]);
-                }
-                else
-                {
-                    outstr[2] = 0;
-                }
-                outMessage.Add(outstr[0]);
-                if (outstr[1] != 0)
-                    outMessage.Add(outstr[1]);
-                if (outstr[2] != 0)
-                    outMessage.Add(outstr[2]);
-            }
-            byte[] outbyte = (byte[])outMessage.ToArray(Type.GetType("System.Byte"));
-            return System.Text.Encoding.Default.GetString(outbyte);
-
-        }
-
-        /// <summary>
-        /// Hex字节转换到字符串
-        /// </summary>
-        public static string HexBytesToString(byte[] input)
-        {
-            StringBuilder hexString = new StringBuilder(64);
-
-            for (int i = 0; i < input.Length; i++)
-            {
-                hexString.Append(String.Format("{0:X2}", input[i]));
-            }
-            return hexString.ToString();
-        }
-        /// <summary>
-        /// 字符串转化为Hex字节
-        /// </summary>
-        public static byte[] StringToHexBytes(string hex)
-        {
-            if (hex.Length == 0)
-            {
-                return new byte[] { 0 };
-            }
-
-            if (hex.Length % 2 == 1)
-            {
-                hex = "0" + hex;
-            }
-
-            byte[] result = new byte[hex.Length / 2];
-
-            for (int i = 0; i < hex.Length / 2; i++)
-            {
-                result[i] = byte.Parse(hex.Substring(2 * i, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
-            }
-
-            return result;
-        }
-    }
-
+  
     public class RestHelper
     {
         public static IRestResponse SendGetRequest(string url, IList<RestResponseCookie> cookiesContainer, string data)
@@ -738,8 +499,6 @@ namespace MyMVCDemo.Controllers
         }
 
     }
-
-
 
     public class CaptchaImage
     {
@@ -1154,5 +913,258 @@ namespace MyMVCDemo.Controllers
         public string Exp { get; set; }
 
         public string Dfp { get; set; }
+    }
+
+    public class TicketInfoForPassengerForm
+    {
+        public List<CardType> CardTypes { get; set; }
+
+        public int IsAsync { get; set; }
+
+        public string Key_check_isChange { get; set; }
+
+        public List<string> LeftDetails { get; set; }
+
+        public string LeftTicketStr { get; set; }
+
+        public LimitBuySeatTicketModel LimitBuySeatTicketDTO { get; set; }
+
+        public int MaxTicketNum { get; set; }
+
+        public OrderRequestModel OrderRequestDTO { get; set; }
+
+        public string Purpose_codes { get; set; }
+
+        public QueryLeftTicketRequestModel QueryLeftTicketRequestDTO { get; set; }
+
+        public string Tour_flag { get; set; }
+
+        public string Train_location { get; set; }
+    }
+
+    public class CardType
+    {
+        public object End_station_time { get; set; }
+
+        public object End_time { get; set; }
+
+        public string Id { get; set; }
+
+        public object Start_station_name { get; set; }
+
+        public object Start_time { get; set; }
+
+        public string Value { get; set; }
+    }
+
+    public class LimitBuySeatTicketModel
+    {
+
+    }
+
+    public class OrderRequestModel
+    {
+
+    }
+
+    public class QueryLeftTicketRequestModel
+    {
+        public string Arrive_time { get; set; }
+
+        public string Bigger20 { get; set; }
+
+        public int Exchange_train_flag { get; set; }
+
+        public string From_station { get; set; }
+
+        public string From_station_name { get; set; }
+
+        public string From_staion_no { get; set; }
+
+        public string Lishi { get; set; }
+
+        public object Login_id { get; set; }
+
+        public object Login_mode { get; set; }
+
+        public object Login_site { get; set; }
+
+        public string Purpose_code { get; set; }
+
+        public object Query_type { get; set; }
+
+        public object SeatTypeAndNum { get; set; }
+
+        public string Seat_Types { get; set; }
+
+        public string Start_time { get; set; }
+
+        public object Start_time_begin { get; set; }
+
+        public object Start_time_end { get; set; }
+
+        public string Station_train_code { get; set; }
+
+        public object Ticket_type { get; set; }
+
+        public string To_station { get; set; }
+
+        public string To_station_name { get; set; }
+
+        public string To_station_no { get; set; }
+
+        public string Train_date { get; set; }
+
+        public object Train_flag { get; set; }
+
+        public object Train_headers { get; set; }
+
+        public string Train_no { get; set; }
+
+        public bool UseMasterPool { get; set; }
+
+        public bool UseWB10LimitTime { get; set; }
+
+        public bool UsingGemfireCache { get; set; }
+
+        public string YpInfoDetail { get; set; }
+    }
+
+    public class OrderQuestDTO
+    {
+        public int Adult_num { get; set; }
+
+        public object Apply_order_no { get; set; }
+
+        public object Bed_level_order_num { get; set; }
+
+        public object Bureau_code { get; set; }
+
+        public object Cancel_flag { get; set; }
+
+        public object Card_num { get; set; }
+
+        public object Channel { get; set; }
+
+        public int Child_num { get; set; }
+
+        public object Choose_seat { get; set; }
+
+        public int Disability_num { get; set; }
+
+        public Train_dateModel End_time { get; set; }
+
+        public int Exchange_train_flag { get; set; }
+
+        public string From_station_name { get; set; }
+
+        public string From_station_telecode { get; set; }
+
+        public object Get_ticket_pass { get; set; }
+
+        public string Id_mode { get; set; }
+
+        public object IsShowPassCode { get; set; }
+
+        public object LeftTicketGenTime { get; set; }
+
+        public object Order_date { get; set; }
+
+        public object PassengerFlag { get; set; }
+
+        public object RealleftTicket { get; set; }
+
+        public object ReqIpAddress { get; set; }
+
+        public object ReqTimeLeftStr { get; set; }
+
+        public string Reserve_flag { get; set; }
+
+        public object Seat_detail_type_code { get; set; }
+
+        public object Seat_type_code { get; set; }
+
+        public object Sequence_no { get; set; }
+
+        public Train_dateModel Start_time { get; set; }
+
+        public object Start_time_str { get; set; }
+
+        public string Station_train_code { get; set; }
+
+        public int Student_num { get; set; }
+
+        public int Ticket_num { get; set; }
+
+        public object Ticket_type_order_num { get; set; }
+
+        public string To_station_name { get; set; }
+
+        public string To_station_telecode { get; set; }
+
+        public string Tour_flag { get; set; }
+
+        public object TrainCodeText { get; set; }
+
+        public Train_dateModel Train_date { get; set; }
+
+        public object Train_date_str { get; set; }
+
+        public object Train_location { get; set; }
+
+        public string Train_no { get; set; }
+
+        public object Train_order { get; set; }
+
+        public object VarStr { get; set; }
+    }
+
+    public class Train_dateModel
+    {
+        public int Date { get; set; }
+
+        public int Day { get; set; }
+
+        public int Hours { get; set; }
+
+        public int Minutes { get; set; }
+
+        public int Month { get; set; }
+
+        public int Seconds { get; set; }
+
+        public string Time { get; set; }
+
+        public int TimezoneOffset { get; set; }
+
+        public int Year { get; set; }
+    }
+
+    public class QueueCountResponseModel
+    {
+        public string ValidateMessageShowId { get; set; }
+        
+        public bool Status { get; set; }
+
+        public int Httpstatus { get; set; }
+
+        public QueueCountResponseData Data { get; set; }
+
+        public List<Object> Messages { get; set; }
+
+        public object ValidateMessages { get; set; }
+    }
+
+    public class QueueCountResponseData
+    {
+        public int Count { get; set; }
+        
+        public string Ticket { get; set; }
+
+        public bool Op_2 { get; set; }
+
+        public int CountT { get; set; }
+
+        public bool Op_1 { get; set; }
     }
 }

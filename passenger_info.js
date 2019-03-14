@@ -854,7 +854,8 @@ var intervalProcess;
 		}
 		function E(V, W) {
 			var X = "";
-			if (ticketInfoForPassengerForm.isAsync == ticket_submit_order.request_flag.isAsync && ticketInfoForPassengerForm.queryLeftTicketRequestDTO.ypInfoDetail != "") {
+			if (ticketInfoForPassengerForm.isAsync == ticket_submit_order.request_flag.isAsync 
+					&& ticketInfoForPassengerForm.queryLeftTicketRequestDTO.ypInfoDetail != "") {
 				$.ajax({
 					url: ctx + "confirmPassenger/getQueueCount",
 					type: "post",

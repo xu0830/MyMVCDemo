@@ -11,8 +11,8 @@ namespace ExceptionCatch.Test
     {
         static void Main(string[] args)
         {
-            String content = "'{content}'";
-            Console.WriteLine(content.Substring(content.IndexOf("'")+1, content.LastIndexOf("'")-content.IndexOf("'")-1));
+            String content = "'{content}};\n";
+            Console.WriteLine(content.Substring(content.IndexOf("'")+1, content.LastIndexOf("}")-content.IndexOf("'")));
         }
     }
 }

@@ -18,22 +18,6 @@ namespace MyMVCDemo.Controllers
     {
         public ActionResult Index(int traderId = 90)
         {
-            //string AccountMoneyAsset = HttpHelper.SendPostRequest("http://localhost:6340/Handlers/Default/Personal/SecurityHandler.ashx/?method=ModifyUserPasswordApi", "LoginName=" + "2017011700" + "&newPwd=" + "123qwe", new CookieContainer(), HttpHelper.header);
-
-            //string AccountMoneyAsset = HttpHelper.SendPostRequest("http://localhost:6340/Handlers/Default/Personal/SecurityHandler.ashx/?method=AdminModifyPasswordApi", "LoginName=" + "testName2" + "&newPwd=" + "123qwe", new CookieContainer(), HttpHelper.header);
-
-            //CookieContainer cookie = HttpHelper.GetCookie("http://localhost:6340/Handlers/Default/Common/IdentityHandler.ashx/?method=Login", "name=xuesheng&isSave=false&pwd=" + JhEncrypt.EncryptString("111111"), HttpHelper.header);
-
-            //string AccountMoneyAsset = HttpHelper.SendPostRequest("http://localhost:6340/Handlers/Default/AssetsQueryHandler.ashx/?method=GetAccountsSummaryConditional", "TraderID=" + 42 + "&MatchID=" + 18, cookie, HttpHelper.header);
-            //ViewBag.Data = AccountMoneyAsset;
-            //string data = HttpHelper.SendPostRequest("http://120.77.254.201:8085/Handlers/Default/User/UserManageHandler.ashx/?method=RegisterStudent", "LoginName=testName6&Password=123456&UserType=5", new CookieContainer(), HttpHelper.header);
-            //ViewBag.Data = data;
-
-            //string data = HttpHelper.SendPostRequest("http://120.77.254.201:8085/Handlers/Default/BankFinanceHandler.ashx/?method=GetBankFundsWithInitFundsConditional", "TraderID=" + traderId, new CookieContainer(), HttpHelper.header);
-            //ViewBag.Data = data;
-
-
-
             return View();
         }
 
@@ -331,7 +315,6 @@ namespace MyMVCDemo.Controllers
 
             #endregion
 
-
             #region checkOrderInfo
             var client_12 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo");
             var request_12 = new RestRequest(Method.POST);
@@ -439,7 +422,6 @@ namespace MyMVCDemo.Controllers
 
 
             #endregion
-
 
             return Json(new
             {

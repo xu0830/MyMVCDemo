@@ -415,6 +415,7 @@ namespace MyMVCDemo.Controllers
             var client_14 = new RestClient("https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue");
             var request_14 = new RestRequest(Method.POST);
             request_14.AddHeader("Cache-Control", "no-cache");
+            request_14.AddHeader("Connection", "true");
             request_14.AddHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
             request_14.AddHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0");
 
@@ -432,13 +433,7 @@ namespace MyMVCDemo.Controllers
             request_14.AddParameter("_jc_save_wfdc_flag", "dc", ParameterType.Cookie);
 
             request_14.AddParameter("application/x-www-form-urlencoded; charset=UTF-8",
-                "passengerTicketStr=O,0,1,许灿杰,1,445281199508301071,13428108149,N" +
-                "&oldPassengerStr=许灿杰,1,445281199508301071,1_&randCode=&purpose_codes=00" +
-                "&key_check_isChange=" + ticketInfoForPassengerForm.Key_check_isChange +
-                "&leftTicketStr=" + ticketInfoForPassengerForm.LeftTicketStr +
-                "&train_location=" + ticketInfoForPassengerForm.Train_location +
-                "&choose_seats=&seatDetailType=000&whatsSelect=1&roomType=00&dwAll=N", ParameterType.RequestBody);
-
+            "passengerTicketStr=O%2C0%2C1%2C%E8%AE%B8%E7%81%BF%E6%9D%B0%2C1%2C445281199508301071%2C13428108149%2CN&oldPassengerStr=%E8%AE%B8%E7%81%BF%E6%9D%B0%2C1%2C445281199508301071%2C1_&randCode=&purpose_codes=00&key_check_isChange=" + ticketInfoForPassengerForm.Key_check_isChange +"&leftTicketStr=dvyb4GXCICmAdvV1nOi%252FETfgTvM7S0%252B0&train_location=Q7&choose_seats=&seatDetailType=000&whatsSelect=1&roomType=00&dwAll=N", ParameterType.RequestBody);
 
             IRestResponse response_14 = client_14.Execute(request_14);
 
